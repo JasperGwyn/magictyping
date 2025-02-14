@@ -1,0 +1,29 @@
+{
+  "name": "phaser-version",
+  "version": "1.0.0",
+  "description": "Phaser version of Lupita Typing Game",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --open",
+    "dev": "cross-env NODE_ENV=development webpack serve --open",
+    "dev:menu": "cross-env START_SCENE=menu webpack serve --open",
+    "dev:instructions": "cross-env START_SCENE=instructions webpack serve --open",
+    "dev:game": "cross-env START_SCENE=game webpack serve --open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.x.x",
+    "@babel/preset-env": "^7.x.x",
+    "babel-loader": "^9.x.x",
+    "copy-webpack-plugin": "^11.x.x",
+    "cross-env": "^7.0.3",
+    "webpack": "^5.x.x",
+    "webpack-cli": "^5.x.x",
+    "webpack-dev-server": "^4.x.x"
+  },
+  "dependencies": {
+    "phaser": "^3.70.0"
+  }
+}
