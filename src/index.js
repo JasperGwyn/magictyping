@@ -4,6 +4,7 @@ import GameScene from './scenes/GameScene';
 import ResultsScene from './scenes/ResultsScene';
 import IntroScene from './scenes/IntroScene';
 import InstructionsScene from './scenes/InstructionsScene';
+import LoadingScene from './scenes/LoadingScene';
 import { SCREEN_CONFIG } from './config/gameConfig';
 
 // Configuración global del juego
@@ -28,7 +29,7 @@ const config = {
         pixelArt: true,
         roundPixels: true
     },
-    scene: [IntroScene, MenuScene, GameScene, InstructionsScene, ResultsScene]
+    scene: [IntroScene, MenuScene, InstructionsScene, LoadingScene, GameScene, ResultsScene]
 };
 
 // Si hay una escena inicial especificada en las variables de entorno, usarla

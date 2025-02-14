@@ -53,6 +53,7 @@ export default class GameScene extends BaseScene {
     }
 
     create() {
+        console.log('GameScene create iniciando');
         super.create();  // Esto creará el fondo común
 
         // Detener todas las músicas activas antes de iniciar el juego
@@ -81,39 +82,45 @@ export default class GameScene extends BaseScene {
         this.createWizard();
         this.createUI();
 
-        // Configurar entrada de texto (solo para ENTER y letras)
-        this.input.keyboard.off('keydown'); // Solo remover el listener general
-        this.input.keyboard.on('keydown-ENTER', () => {
-            if (!this.gameOver) {
-                this.checkWord();
-            }
-        }, this);
-        this.input.keyboard.on('keydown-BACKSPACE', () => {
-            if (!this.gameOver) {
-                this.userText = this.userText.slice(0, -1);
-                this.userTextField.setText(this.userText);
-            }
-        }, this);
-        
-        // Manejar letras individualmente
-        this.input.keyboard.on('keydown', (event) => {
-            if (!this.gameOver && event.key.length === 1 && event.key.match(/[a-záéíóúñA-ZÁÉÍÓÚÑ]/i)) {
-                this.userText += event.key.toUpperCase();
-                this.userTextField.setText(this.userText);
-            }
-        }, this);
+        // Crear el texto de instrucción inicial
+        this.initialText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 50, 'Tipea las palabras que van cayendo\n y luego apretá ENTER', {
+            fontFamily: '"Press Start 2P"',
+            fontSize: '15    px',
+            color: '#ffffff',
+            align: 'center',
+            backgroundColor: '#00000088',
+            padding: { x: 15, y: 10 }
+        }).setOrigin(0.5);
 
-        // Restaurar el handler de ESC del BaseScene
-        this.input.keyboard.on('keydown-ESC', () => {
-            // Detener la música actual si existe
-            if (this.music) this.music.stop();
+        // Listener global para cualquier tecla
+        const handleFirstKey = (event) => {
+            // Remover el texto inicial
+            if (this.initialText) {
+                this.initialText.destroy();
+                this.initialText = null;
+            }
             
-            // Transición al menú usando el sistema de escenas de Phaser
-            this.scene.start('menu');
-        });
+            // Remover este listener y configurar los listeners del juego
+            this.input.keyboard.off('keydown', handleFirstKey);
+            this.setupGameInputs();
+
+            // Procesar la primera tecla como un input válido
+            if (!this.gameOver && event.key.length === 1 && event.key.match(/[a-záéíóúñA-ZÁÉÍÓÚÑ]/i)) {
+                this.userText = event.key.toUpperCase();
+                this.userTextField.setText(this.userText);
+            }
+        };
+
+        // Agregar el listener inicial
+        this.input.keyboard.on('keydown', handleFirstKey);
 
         // Mostrar introducción del nivel antes de comenzar
         this.showLevelIntro();
+
+        // Emitir evento cuando todo esté listo
+        console.log('GameScene emitiendo evento ready');
+        this.events.emit('ready');
+        console.log('GameScene evento ready emitido');
     }
 
     createWizard() {
@@ -179,7 +186,7 @@ export default class GameScene extends BaseScene {
         });
 
         // Crear campo de texto del usuario
-        this.userTextField = this.add.text(400, SCREEN_CONFIG.HEIGHT - 50, '', {
+        this.userTextField = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 50, '', {
             fontFamily: '"Press Start 2P"',
             fontSize: '28px',
             fill: '#fff',
@@ -567,6 +574,37 @@ export default class GameScene extends BaseScene {
 
         mainExplosion.on('animationcomplete', () => {
             mainExplosion.destroy();
+        });
+    }
+
+    // Mover toda la configuración de inputs a un método separado
+    setupGameInputs() {
+        // Configurar entrada de texto (solo para ENTER y letras)
+        this.input.keyboard.on('keydown-ENTER', () => {
+            if (!this.gameOver) {
+                this.checkWord();
+            }
+        }, this);
+
+        this.input.keyboard.on('keydown-BACKSPACE', () => {
+            if (!this.gameOver) {
+                this.userText = this.userText.slice(0, -1);
+                this.userTextField.setText(this.userText);
+            }
+        }, this);
+        
+        // Manejar letras individualmente
+        this.input.keyboard.on('keydown', (event) => {
+            if (!this.gameOver && event.key.length === 1 && event.key.match(/[a-záéíóúñA-ZÁÉÍÓÚÑ]/i)) {
+                this.userText += event.key.toUpperCase();
+                this.userTextField.setText(this.userText);
+            }
+        }, this);
+
+        // Restaurar el handler de ESC
+        this.input.keyboard.on('keydown-ESC', () => {
+            if (this.music) this.music.stop();
+            this.scene.start('menu');
         });
     }
 } 

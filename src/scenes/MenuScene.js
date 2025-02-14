@@ -17,25 +17,31 @@ export default class MenuScene extends BaseScene {
     create() {
         super.create();
         
-        // Verificar si hay alguna música sonando
-        const menuMusic = this.sound.get('menu_music');
-        if (!menuMusic || !menuMusic.isPlaying) {
-            // Intentar reproducir la música del menú primero
-            if (this.cache.audio.exists('menu_music')) {
-                this.music = this.sound.add('menu_music', {
-                    volume: 0.5,
-                    loop: true
-                });
-                this.music.play();
-            } 
-            // Si no está disponible la música del menú, usar la de la intro
-            else if (this.cache.audio.exists('intro_music')) {
-                this.music = this.sound.add('intro_music', {
-                    volume: 0.5,
-                    loop: true
-                });
-                this.music.play();
-            }
+        // Verificar si hay alguna música sonando usando el sistema de sonido global
+        const allSounds = this.sound.sounds;
+        
+        // Logs para debug
+        console.log('=== Debug Música ===');
+        console.log('Todos los sonidos:', allSounds);
+        console.log('Sonidos activos:', allSounds.filter(sound => sound.isPlaying));
+        
+        const isAnyMusicPlaying = allSounds.some(sound => 
+            (sound.key === 'intro_music' || sound.key === 'menu_music') && 
+            sound.isPlaying
+        );
+        
+        console.log('isAnyMusicPlaying:', isAnyMusicPlaying);
+        
+        // Solo inicializar música si no hay ninguna sonando
+        if (!isAnyMusicPlaying) {
+            // Usar la música que ya esté cargada (intro o menu)
+            const musicKey = this.cache.audio.exists('menu_music') ? 'menu_music' : 'intro_music';
+            console.log('Iniciando nueva música:', musicKey);
+            this.music = this.sound.add(musicKey, {
+                volume: 0.5,
+                loop: true
+            });
+            this.music.play();
         }
 
         // Crear título con sombra
@@ -103,23 +109,48 @@ export default class MenuScene extends BaseScene {
             }
         });
 
-        // Evento de teclado para ESPACIO
-        this.input.keyboard.on('keydown-SPACE', () => {
-            // Detener la música actual
-            if (this.music) this.music.stop();
-            
-            // Transición a la escena de instrucciones
-            this.scene.start('instructions');
-        });
+        // Configurar el evento de SPACE una sola vez
+        this.spaceKey = this.input.keyboard.addKey('SPACE');
+        this.spaceKey.on('down', this.handleSpaceKey, this);
 
         // Iniciar esta escena en modo transparente
         this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
     }
 
+    // Mover la lógica del manejo de SPACE a un método separado
+    handleSpaceKey() {
+        // Solo procesar si estamos en la escena del menú y está activa
+        if (this.scene.key !== 'menu' || !this.scene.isActive()) {
+            return;
+        }
+
+        // Detener la música si existe
+        if (this.music) {
+            this.music.stop();
+        }
+
+        // Transición limpia a la siguiente escena
+        this.scene.stop('intro');    // Asegurarnos que la intro esté detenida
+        this.scene.stop('menu');     // Detener esta escena
+        this.scene.start('instructions'); // Iniciar la nueva escena
+    }
+
     shutdown() {
-        // Limpiar eventos y tweens al salir de la escena
+        // Limpiar todos los recursos
+        if (this.spaceKey) {
+            this.spaceKey.removeAllListeners();
+            this.spaceKey = null;
+        }
+        
+        if (this.music) {
+            this.music.stop();
+            this.music = null;
+        }
+        
         this.tweens.killAll();
         this.input.keyboard.removeAllListeners();
+        this.events.removeAllListeners();
+        
         super.shutdown();
     }
 } 

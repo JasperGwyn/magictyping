@@ -105,8 +105,8 @@ export default class InstructionsScene extends BaseScene {
             // Detener la música actual si existe
             if (this.music) this.music.stop();
             
-            // Transición a la escena del juego
-            this.scene.start('game');
+            // Transición a la escena de carga
+            this.scene.start('loading');
         });
     }
 } 
