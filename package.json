@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development webpack serve --open",
     "dev:menu": "cross-env START_SCENE=menu webpack serve --open",
     "dev:instructions": "cross-env START_SCENE=instructions webpack serve --open",
-    "dev:game": "cross-env START_SCENE=game webpack serve --open"
+    "dev:game": "cross-env START_SCENE=game webpack serve --open",
+    "build": "webpack --mode production"
   },
   "keywords": [],
   "author": "",
