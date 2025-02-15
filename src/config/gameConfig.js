@@ -61,7 +61,7 @@ export const PALABRAS_POR_NIVEL = {
 
 export const GAME_CONFIG = {
     VIDAS_INICIALES: 3,
-    VELOCIDAD_BASE: 100,        // Velocidad inicial de caída
+    VELOCIDAD_BASE: 50,        // Velocidad inicial de caída
     FRECUENCIA_SPAWN: 2000,     // Tiempo entre palabras en milisegundos
     INCREMENTO_VELOCIDAD: 1.1,  // Multiplicador de velocidad por nivel
     INCREMENTO_FRECUENCIA: 1.5, // Multiplicador de frecuencia por nivel
