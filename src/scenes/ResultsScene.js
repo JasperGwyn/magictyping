@@ -12,6 +12,7 @@ export default class ResultsScene extends BaseScene {
         this.cursorTimer = null;
         this.displayObjects = [];
         this.panel = null;
+        this.previousScores = null;
     }
 
     preload() {
@@ -49,8 +50,12 @@ export default class ResultsScene extends BaseScene {
         // Verificar y guardar highscore
         if (HighScores.isHighScore(score)) {
             console.log('Es un nuevo highscore!');
-            this.waitingForName = true;
-            this.createNameInput();
+            // Tomar "foto" de los scores actuales
+            HighScores.get().then(currentScores => {
+                this.previousScores = currentScores || [];
+                this.waitingForName = true;
+                this.createNameInput();
+            });
         } else {
             console.log('No es un nuevo highscore');
             this.showLeaderboard();
@@ -80,10 +85,11 @@ export default class ResultsScene extends BaseScene {
     handleKeyInput(event) {
         if (this.waitingForName) {
             if (event.key === 'Enter' && this.playerName) {
-                this.saveScore();
                 this.waitingForName = false;
                 this.clearDisplayObjects();
-                this.showLeaderboard();
+                this.saveScore().then(() => {
+                    this.showLeaderboard();
+                });
             } else if (event.key === 'Backspace') {
                 this.playerName = this.playerName.slice(0, -1);
                 this.updateNameText();
@@ -207,9 +213,25 @@ export default class ResultsScene extends BaseScene {
             );
         }
 
-        // Obtener los scores y esperar que se resuelva la Promise
-        const scores = await HighScores.get();
-        console.log('Scores actuales:', scores);
+        // En vez de obtener los scores de la API, usar la foto + el nuevo score
+        let scores;
+        if (this.previousScores) {
+            // Si tenemos una foto, insertar el nuevo score en orden
+            const newScore = {
+                name: this.playerName,
+                score: this.registry.get('score'),
+                date: new Date().toISOString()
+            };
+            
+            scores = [...this.previousScores, newScore]
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);  // Mantener solo los top 5
+        } else {
+            // Si no hay foto (no es highscore), obtener de la API
+            scores = await HighScores.get();
+        }
+
+        console.log('Scores a mostrar:', scores);
 
         // Título del leaderboard
         this.displayObjects.push(
@@ -264,17 +286,17 @@ export default class ResultsScene extends BaseScene {
         });
     }
 
-    saveScore() {
+    async saveScore() {
         const score = this.registry.get('score') || 0;
         console.log('Guardando score:', score, 'con nombre:', this.playerName);
         
-        // Agregar el score con el nombre del jugador
-        HighScores.add({
+        // Agregar el score con el nombre del jugador y esperar que termine
+        await HighScores.add({
             score: score,
             name: this.playerName || 'undefined'
         });
         
-        console.log('Scores después de guardar:', HighScores.get());
+        console.log('Score guardado, mostrando leaderboard');
     }
 
     shutdown() {

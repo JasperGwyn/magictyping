@@ -50,6 +50,7 @@ export default class GameScene extends BaseScene {
         this.load.audio('error', 'assets/sounds/effects/lowThreeTone.ogg');
         this.load.audio('explosion', 'assets/sounds/effects/sfx_explosionGoo.ogg');
         this.load.audio('game_music', `assets/sounds/music/game_theme_nivel${this.level}.ogg`);
+        this.load.image('dedos_teclado', 'assets/images/ui/dedosteclado.png');
     }
 
     create() {
@@ -83,9 +84,9 @@ export default class GameScene extends BaseScene {
         this.createUI();
 
         // Crear el texto de instrucción inicial
-        this.initialText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 50, 'Tipea las palabras que van cayendo\n y luego apretá ENTER', {
+        this.initialText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 50, 'Escribí las palabras que van cayendo\n y luego apretá ENTER', {
             fontFamily: '"Press Start 2P"',
-            fontSize: '15    px',
+            fontSize: '15px',
             color: '#ffffff',
             align: 'center',
             backgroundColor: '#00000088',
@@ -121,6 +122,16 @@ export default class GameScene extends BaseScene {
         console.log('GameScene emitiendo evento ready');
         this.events.emit('ready');
         console.log('GameScene evento ready emitido');
+
+        // Agregar imagen de referencia de dedos con depth bajo
+        const teclado = this.add.image(
+            SCREEN_CONFIG.WIDTH - 120,
+            SCREEN_CONFIG.HEIGHT / 3 - 30,
+            'dedos_teclado'
+        );
+        teclado.setScale(120 / teclado.width);
+        teclado.setAlpha(0.8);
+        teclado.setDepth(1);  // Depth bajo para que otros elementos aparezcan encima
     }
 
     createWizard() {
@@ -426,6 +437,12 @@ export default class GameScene extends BaseScene {
             align: 'center',
             wordWrap: { width: 600 }
         }).setOrigin(0.5);
+
+        // Asegurarnos que el panel y el texto estén por encima de todo
+        const depth = 1000;  // Un número alto para estar sobre otros elementos
+        bg.setDepth(depth);
+        levelTitle.setDepth(depth);
+        descText.setDepth(depth);
 
         // Animación de fade out después de 2 segundos
         this.time.delayedCall(2000, () => {
