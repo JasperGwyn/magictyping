@@ -4,11 +4,12 @@
   "description": "Phaser version of Lupita Typing Game",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --open",
-    "dev": "cross-env NODE_ENV=development webpack serve --open",
+    "start": "webpack serve --open --progress",
+    "dev": "cross-env NODE_ENV=development webpack serve --open --progress",
     "dev:menu": "cross-env START_SCENE=menu webpack serve --open",
     "dev:instructions": "cross-env START_SCENE=instructions webpack serve --open",
     "dev:game": "cross-env START_SCENE=game webpack serve --open",
+    "dev:results": "cross-env START_SCENE=results webpack serve --open",
     "build": "webpack --mode production"
   },
   "keywords": [],
@@ -20,11 +21,13 @@
     "babel-loader": "^9.x.x",
     "copy-webpack-plugin": "^11.x.x",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
     "webpack": "^5.x.x",
     "webpack-cli": "^5.x.x",
     "webpack-dev-server": "^4.x.x"
   },
   "dependencies": {
+    "@vercel/edge-config": "^1.4.0",
     "phaser": "^3.70.0"
   }
 }

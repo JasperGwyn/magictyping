@@ -7,9 +7,9 @@ export default class InstructionsScene extends BaseScene {
         this.useCommonBackground = true;
         this.instructions = [
             "¡BIENVENIDO A LA AVENTURA!",
-            "ESCRIBE LAS PALABRAS QUE CAEN\nY PRESIONA ENTER\n ANTES QUE TOQUEN LA LÍNEA ROJA",
+            "ESCRIBE LAS PALABRAS QUE CAEN\nY PRESIONA ENTER\n PARA QUE DESAPAREZCAN",
             "USA LOS DEDOS CORRECTOS",
-            "¡NO DEJES LAS PALABRAS\nTOQUEN LA LÍNEA ROJA!"
+            "¡NO DEJES QUE LAS PALABRAS\nLLEGUEN AL PISO!"
         ];
     }
 

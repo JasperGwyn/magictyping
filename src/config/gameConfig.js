@@ -38,7 +38,7 @@ export const PALABRAS_POR_NIVEL = {
         descripcion: 'SOLO DEDOS MEDIOS (D Y K)'
     },
     3: {  // Nivel 3: Solo Dedos anulares
-        palabras: ['SOL', 'LOS', 'SOX','WOS','SOS','XOXO', 'KIW', 'IDE', 'ED', 'CE','CECI','KID','CID'],
+        palabras: ['SOL', 'LOS', 'SOX','WOS','SOS','XOXO'],
         descripcion: 'SOLO DEDOS ANULARES (S Y L)'
     },
     4: {  // Nivel 4: Solo Dedos meñiques

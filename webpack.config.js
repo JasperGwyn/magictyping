@@ -1,6 +1,50 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Cargar variables de entorno en orden de prioridad
+const loadEnvVars = () => {
+    console.log('\n=== Loading Environment Variables ===');
+    
+    // 1. Cargar .env.development.local
+    const localEnv = dotenv.config({ path: '.env.development.local' }).parsed || {};
+    console.log('Variables from .env.development.local:', Object.keys(localEnv));
+    
+    // 2. Cargar .env si existe
+    const defaultEnv = dotenv.config({ path: '.env' }).parsed || {};
+    console.log('Variables from .env:', Object.keys(defaultEnv));
+    
+    // 3. Combinar con process.env
+    const finalEnv = {
+        ...defaultEnv,
+        ...localEnv,
+        ...process.env
+    };
+    
+    console.log('Final environment config:', {
+        NODE_ENV: finalEnv.NODE_ENV,
+        EDGE_CONFIG: finalEnv.EDGE_CONFIG ? 'exists' : 'missing'
+    });
+    
+    return finalEnv;
+};
+
+const env = loadEnvVars();
+
+const envVars = {
+    'process.env': JSON.stringify({
+        NODE_ENV: env.NODE_ENV || 'development',
+        START_SCENE: env.START_SCENE || null,
+        EDGE_CONFIG: env.EDGE_CONFIG,
+        VERCEL_API_TOKEN: env.VERCEL_API_TOKEN
+    })
+};
+
+console.log('Webpack DefinePlugin vars:', {
+    env: JSON.parse(envVars['process.env'])
+});
+console.log('=== Webpack Environment Setup Complete ===');
 
 module.exports = {
     entry: './src/index.js',
@@ -28,10 +72,7 @@ module.exports = {
                 { from: 'public', to: '' }
             ]
         }),
-        new webpack.DefinePlugin({
-            'process.env.START_SCENE': JSON.stringify(process.env.START_SCENE || null),
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        })
+        new webpack.DefinePlugin(envVars)
     ],
     devServer: {
         static: {

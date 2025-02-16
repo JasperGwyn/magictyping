@@ -1,5 +1,6 @@
 import BaseScene from './BaseScene';
 import { SCREEN_CONFIG, PALABRAS_POR_NIVEL } from '../config/gameConfig';
+import { HighScores } from '../services/storage/scores';
 
 export default class ResultsScene extends BaseScene {
     constructor() {
@@ -25,61 +26,33 @@ export default class ResultsScene extends BaseScene {
     create() {
         super.create();
 
+        // Si la escena se inicia directamente (START_SCENE=results)5
+        if (process.env.START_SCENE === 'results') {
+            this.registry.set('score', 999);
+            this.registry.set('level', 999);
+        }
+
+        console.log('ResultsScene create iniciando');
+
         // Iniciar música
         if (this.music) this.music.stop();
         this.music = this.sound.add('results_music', { volume: 0.5, loop: true });
         this.music.play();
 
-        // Panel semi-transparente (ahora como propiedad de la clase)
-        this.panel = this.add.rectangle(
-            SCREEN_CONFIG.WIDTH / 2,
-            SCREEN_CONFIG.HEIGHT / 2,
-            SCREEN_CONFIG.WIDTH * 0.8,
-            SCREEN_CONFIG.HEIGHT * 0.7,
-            0x000000,
-            0.7
-        );
-
-        // Calcular la posición superior del panel
-        const panelTop = this.panel.y - (this.panel.height / 2);
-
         // Obtener puntuación y nivel del registro
         const score = this.registry.get('score') || 0;
-        const level = this.registry.get('level') || 1;
+        console.log('Score actual:', score);
 
-        // Título principal (ahora dentro del panel)
-        this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, panelTop + 40, '¡JUEGO TERMINADO!', {
-                fontFamily: '"Press Start 2P"',
-                fontSize: '32px',
-                fill: '#ffffff'
-            }).setOrigin(0.5)
-        );
-
-        // Mostrar puntuación y nivel
-        this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, panelTop + 90, `PUNTUACIÓN FINAL: ${score}`, {
-                fontFamily: '"Press Start 2P"',
-                fontSize: '24px',
-                fill: '#ffffff'
-            }).setOrigin(0.5)
-        );
-
-        this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, panelTop + 130, `NIVEL ALCANZADO: ${level}`, {
-                fontFamily: '"Press Start 2P"',
-                fontSize: '24px',
-                fill: '#ffffff'
-            }).setOrigin(0.5)
-        );
-
-        // Verificar si es high score
-        const highScores = JSON.parse(localStorage.getItem('highScores') || '[]');
-        this.waitingForName = highScores.length < 10 || score > highScores[highScores.length - 1].score;
-
-        if (this.waitingForName) {
+        // Debug: probar el sistema de highscores
+        console.log('Scores antes de agregar:', HighScores.get());
+        
+        // Verificar y guardar highscore
+        if (HighScores.isHighScore(score)) {
+            console.log('Es un nuevo highscore!');
+            this.waitingForName = true;
             this.createNameInput();
         } else {
+            console.log('No es un nuevo highscore');
             this.showLeaderboard();
         }
 
@@ -129,9 +102,37 @@ export default class ResultsScene extends BaseScene {
 
     createNameInput() {
         const centerY = SCREEN_CONFIG.HEIGHT / 2;
+        const score = this.registry.get('score');
+        const level = this.registry.get('level');
 
+        // Resetear el nombre del jugador
+        this.playerName = '';
+
+        // Panel de fondo
+        this.panel = this.add.rectangle(
+            SCREEN_CONFIG.WIDTH/2,
+            SCREEN_CONFIG.HEIGHT/2,
+            SCREEN_CONFIG.WIDTH * 0.6,
+            SCREEN_CONFIG.HEIGHT * 0.7,
+            0x000000,
+            0.7
+        );
+
+        // Resumen de la partida
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 40, '¡NUEVO HIGH SCORE!', {
+            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 100, 
+                `¡PARTIDA TERMINADA!\n\nNivel alcanzado: ${level}\nPuntuación final: ${score}`, {
+                fontFamily: '"Press Start 2P"',
+                fontSize: '20px',
+                fill: '#ffffff',
+                align: 'center',
+                lineSpacing: 10
+            }).setOrigin(0.5)
+        );
+
+        // Texto de nuevo highscore
+        this.displayObjects.push(
+            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 10, '\n\n¡NUEVO HIGH SCORE!', {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
                 fill: '#ffff00'
@@ -139,7 +140,7 @@ export default class ResultsScene extends BaseScene {
         );
 
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY, 'INGRESA TU NOMBRE:', {
+            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 30, '\nINGRESA TU NOMBRE:', {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 fill: '#ffff00'
@@ -147,7 +148,7 @@ export default class ResultsScene extends BaseScene {
         );
 
         // Crear un contenedor para el texto del nombre
-        const nameContainer = this.add.container(SCREEN_CONFIG.WIDTH/2, centerY + 40);
+        const nameContainer = this.add.container(SCREEN_CONFIG.WIDTH/2, centerY + 70);
         this.displayObjects.push(nameContainer);
 
         // Texto base (siempre visible)
@@ -171,10 +172,8 @@ export default class ResultsScene extends BaseScene {
         this.cursorTimer = this.time.addEvent({
             delay: 500,
             callback: () => {
-                if (this.cursorText && this.cursorText.active) {
-                    this.showCursor = !this.showCursor;
-                    this.cursorText.setAlpha(this.showCursor ? 1 : 0);
-                }
+                this.showCursor = !this.showCursor;
+                this.cursorText.setAlpha(this.showCursor ? 1 : 0);
             },
             loop: true
         });
@@ -192,46 +191,62 @@ export default class ResultsScene extends BaseScene {
         }
     }
 
-    showLeaderboard() {
-        // Limpiar objetos anteriores pero mantener el panel
+    async showLeaderboard() {
+        // Limpiar objetos anteriores
         this.clearDisplayObjects();
+
+        // Crear el panel si no existe
+        if (!this.panel) {
+            this.panel = this.add.rectangle(
+                SCREEN_CONFIG.WIDTH / 2,
+                SCREEN_CONFIG.HEIGHT / 2,
+                SCREEN_CONFIG.WIDTH * 0.6,
+                SCREEN_CONFIG.HEIGHT * 0.7,
+                0x000000,
+                0.7
+            );
+        }
+
+        // Obtener los scores y esperar que se resuelva la Promise
+        const scores = await HighScores.get();
+        console.log('Scores actuales:', scores);
 
         // Título del leaderboard
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, this.panel.y - (this.panel.height/2) + 40, 'MEJORES PUNTAJES', {
+            this.add.text(SCREEN_CONFIG.WIDTH/2, this.panel.y - (this.panel.height/2) + 80, 'MEJORES PUNTAJES', {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
-                fill: '#ffffff'
+                fill: '#ffff00'
             }).setOrigin(0.5)
         );
 
         // Mostrar los mejores puntajes
-        const highScores = JSON.parse(localStorage.getItem('highScores') || '[]');
-        let yOffset = this.panel.y - (this.panel.height/4);
+        let yOffset = this.panel.y - (this.panel.height/4) + 60;
+        const scoreSpacing = 35;  // Reducido de 40 a 35
 
         // Mostrar 5 entradas, rellenando con espacios vacíos si es necesario
         for (let i = 0; i < 5; i++) {
-            const score = highScores[i];
-            const isCurrentScore = score && score.name === this.playerName && score.score === this.registry.get('score');
-            const color = isCurrentScore ? '#00ff00' : '#ffffff';
-            
+            const score = scores[i];
             let scoreText;
+            let isCurrentScore = false;
+            
             if (score) {
-                scoreText = `${i + 1}. ${score.name}: ${score.score} (Nivel ${score.level})`;
+                isCurrentScore = score.name === this.playerName && score.score === this.registry.get('score');
+                scoreText = `${i + 1}. ${score.name}: ${score.score}`;
             } else {
                 scoreText = `${i + 1}. ---`;
             }
             
             this.displayObjects.push(
-                this.add.text(SCREEN_CONFIG.WIDTH/2, yOffset + (i * 40), scoreText, {
+                this.add.text(SCREEN_CONFIG.WIDTH/2, yOffset + (i * scoreSpacing), scoreText, {
                     fontFamily: '"Press Start 2P"',
                     fontSize: '20px',
-                    fill: color
+                    fill: score ? (isCurrentScore ? '#00ff00' : '#ffffff') : '#666666'
                 }).setOrigin(0.5)
             );
         }
 
-        // Texto para volver al menú con parpadeo
+        // Texto para volver al menú
         const menuText = this.add.text(SCREEN_CONFIG.WIDTH/2, SCREEN_CONFIG.HEIGHT - 50, 
             'PRESIONA ESPACIO PARA VOLVER AL MENÚ', {
             fontFamily: '"Press Start 2P"',
@@ -250,23 +265,16 @@ export default class ResultsScene extends BaseScene {
     }
 
     saveScore() {
-        try {
-            const highScores = JSON.parse(localStorage.getItem('highScores') || '[]');
-            highScores.push({
-                name: this.playerName,
-                score: this.registry.get('score') || 0,
-                level: this.registry.get('level') || 1,
-                date: new Date().toISOString()
-            });
-            
-            // Ordenar por puntuación y mantener solo los mejores 10
-            highScores.sort((a, b) => b.score - a.score);
-            highScores.splice(10);
-            
-            localStorage.setItem('highScores', JSON.stringify(highScores));
-        } catch (error) {
-            console.error('Error saving score:', error);
-        }
+        const score = this.registry.get('score') || 0;
+        console.log('Guardando score:', score, 'con nombre:', this.playerName);
+        
+        // Agregar el score con el nombre del jugador
+        HighScores.add({
+            score: score,
+            name: this.playerName || 'undefined'
+        });
+        
+        console.log('Scores después de guardar:', HighScores.get());
     }
 
     shutdown() {
