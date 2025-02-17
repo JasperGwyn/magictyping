@@ -48,18 +48,19 @@ export default class ResultsScene extends BaseScene {
         console.log('Scores antes de agregar:', HighScores.get());
         
         // Verificar y guardar highscore
-        if (HighScores.isHighScore(score)) {
-            console.log('Es un nuevo highscore!');
-            // Tomar "foto" de los scores actuales
-            HighScores.get().then(currentScores => {
-                this.previousScores = currentScores || [];
-                this.waitingForName = true;
-                this.createNameInput();
-            });
-        } else {
-            console.log('No es un nuevo highscore');
-            this.showLeaderboard();
-        }
+        HighScores.isHighScore(score).then(isHigh => {
+            if (isHigh) {
+                console.log('Es un nuevo highscore!');
+                HighScores.get().then(currentScores => {
+                    this.previousScores = currentScores || [];
+                    this.waitingForName = true;
+                    this.createNameInput();
+                });
+            } else {
+                console.log('No es un nuevo highscore');
+                this.showLeaderboard();
+            }
+        });
 
         // Input handling
         this.input.keyboard.on('keydown', this.handleKeyInput, this);

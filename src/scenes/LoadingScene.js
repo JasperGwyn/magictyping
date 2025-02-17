@@ -17,6 +17,20 @@ export default class LoadingScene extends BaseScene {
         console.log('LoadingScene create iniciando');
         super.create();
         
+        // Crear el fondo animado
+        this.createBackground();
+
+        // Si venimos de la intro, iniciar el juego
+        if (this.scene.get('instructions').scene.isActive()) {
+            // Poner esta escena al fondo
+            this.scene.sendToBack();
+            // Iniciar el juego
+            this.scene.launch('game');
+        } else {
+            // Si es el inicio del juego, ir a instrucciones
+            this.scene.start('instructions');
+        }
+        
         // Texto de "CARGANDO..." simple, sin animaciones
         const loadingText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT / 2, 'CARGANDO...', {
             fontFamily: '"Press Start 2P"',
@@ -50,8 +64,12 @@ export default class LoadingScene extends BaseScene {
     }
 
     shutdown() {
-        console.log('LoadingScene shutdown iniciado');
-        super.shutdown();
-        console.log('LoadingScene shutdown completado');
+        // Sobreescribir shutdown para que no limpie nada
+        // No llamar a super.shutdown()
+    }
+
+    stop() {
+        // Sobreescribir stop para que no se detenga
+        // No llamar a super.stop()
     }
 } 

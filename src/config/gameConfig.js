@@ -16,17 +16,6 @@ export const COLORS = {
     MEÑIQUE_DER: '#FF0000'   // Rojo
 };
 
-export const TECLAS_POR_DEDO = {
-    MEÑIQUE_IZQ: ['Q', 'A', 'Z'],
-    ANULAR_IZQ: ['W', 'S', 'X'],
-    MEDIO_IZQ: ['E', 'D', 'C'],
-    INDICE_IZQ: ['R', 'F', 'V'],
-    PULGAR_IZQ: [' '],
-    INDICE_DER: ['Y', 'H', 'N'],
-    MEDIO_DER: ['U', 'J', 'M'],
-    ANULAR_DER: ['I', 'K'],
-    MEÑIQUE_DER: ['O', 'L', 'P', 'Ñ']
-};
 
 export const PALABRAS_POR_NIVEL = {
     1: {  // Nivel 1: Solo Dedos índices (posición base)
@@ -61,7 +50,7 @@ export const PALABRAS_POR_NIVEL = {
 
 export const GAME_CONFIG = {
     VIDAS_INICIALES: 3,
-    VELOCIDAD_BASE: 30,        // Velocidad inicial de caída
+    VELOCIDAD_BASE: 200,        // Velocidad inicial de caída
     FRECUENCIA_SPAWN: 4000,     // Tiempo entre palabras en milisegundos
     INCREMENTO_VELOCIDAD: 1.1,  // Multiplicador de velocidad por nivel
     INCREMENTO_FRECUENCIA: 1.5, // Multiplicador de frecuencia por nivel

@@ -4,15 +4,23 @@ console.log('=== Edge Config Initialization ===');
 
 // Función segura para verificar variables de entorno
 const checkEnvVars = () => {
-    console.log('Checking environment variables...');
+    console.log('=== Checking Environment Variables ===');
     const vars = {
         NODE_ENV: process.env.NODE_ENV,
         EDGE_CONFIG: process.env.EDGE_CONFIG,
         VERCEL_API_TOKEN: process.env.VERCEL_API_TOKEN
     };
-    console.log('Available variables:', vars);
+    
+    // Logs más detallados
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('Edge Config URL:', vars.EDGE_CONFIG ? 'Set' : 'Missing');
+    console.log('API Token:', vars.VERCEL_API_TOKEN ? 'Set' : 'Missing');
+    
+    const hasConfig = !!vars.EDGE_CONFIG && !!vars.VERCEL_API_TOKEN;
+    console.log('Config Status:', hasConfig ? 'Complete' : 'Incomplete');
+    
     return {
-        hasConfig: !!vars.EDGE_CONFIG && !!vars.VERCEL_API_TOKEN,
+        hasConfig,
         env: vars.NODE_ENV || 'unknown'
     };
 };

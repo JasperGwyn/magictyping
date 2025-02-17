@@ -543,7 +543,7 @@ export default class GameScene extends BaseScene {
             word.container.y += (word.speed * delta) / 1000;
             
             // Verificar si la palabra llegó al fondo
-            if (word.container.y > SCREEN_CONFIG.HEIGHT) {
+            if (word.container.y >= SCREEN_CONFIG.HEIGHT - 15 ) {
                 this.loseLife();
                 // Crear efecto de explosión antes de destruir
                 this.createExplosionEffect(word.container.x, SCREEN_CONFIG.HEIGHT);

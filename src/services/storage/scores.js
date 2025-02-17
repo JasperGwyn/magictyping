@@ -50,10 +50,26 @@ export const HighScores = {
     isHighScore: async (score) => {
         try {
             const scores = await HighScores.get();
-            return scores.length < MAX_SCORES || score > scores[scores.length - 1]?.score;
+            console.log('Verificando highscore:', score);
+            console.log('Scores actuales:', scores);
+
+            // Si hay menos de 5 scores, cualquier score es highscore
+            if (scores.length < 5) {
+                console.log('Menos de 5 scores, es highscore');
+                return true;
+            }
+
+            // Ordenar scores de mayor a menor
+            const sortedScores = [...scores].sort((a, b) => b.score - a.score);
+            const lowestScore = sortedScores[4].score;  // El 5to score (índice 4)
+            
+            console.log('Score más bajo actual:', lowestScore);
+            console.log('Es highscore:', score > lowestScore);
+            
+            return score > lowestScore;
         } catch (error) {
             console.error('Error checking high score:', error);
-            return true; // En caso de error, permitir el highscore
+            return false;  // En caso de error, no es highscore
         }
     },
 
