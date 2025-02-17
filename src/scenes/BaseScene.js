@@ -1,9 +1,16 @@
+import { SCREEN_CONFIG } from '../config/gameConfig';
+
 export default class BaseScene extends Phaser.Scene {
     constructor(key) {
         super(key);
     }
 
     preload() {
+        // Suprimir logs de error de carga
+        this.load.on('loaderror', (file) => {
+            console.log(`Archivo no encontrado: ${file.src}`);
+        });
+        
         if (!this.textures.exists('castle')) {
             // Cargar todos los assets necesarios para el fondo
             this.load.image('castle', 'assets/images/backgrounds/castle.png');
@@ -29,8 +36,12 @@ export default class BaseScene extends Phaser.Scene {
     }
 
     initBackground() {
+        // Asegurarnos que tenemos las dimensiones correctas
+        const width = this.cameras.main.width || SCREEN_CONFIG.WIDTH;
+        const height = this.cameras.main.height || SCREEN_CONFIG.HEIGHT;
+
         // Fondo azul cielo
-        this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0x87CEEB)
+        this.add.rectangle(0, 0, width, height, 0x87CEEB)
             .setOrigin(0);
 
         // Sol - mantenemos proporción 1:1 para el sol
@@ -53,13 +64,13 @@ export default class BaseScene extends Phaser.Scene {
         for (let i = 0; i < 5; i++) {
             const baseWidth = 200;
             const cloud = this.add.image(
-                Phaser.Math.Between(0, this.cameras.main.width),
+                Phaser.Math.Between(0, width),
                 Phaser.Math.Between(30, 200),
                 'cloud1'
             );
             
             // Mantener proporción original
-            const scale = baseWidth / cloud.width;
+            const scale = cloud.width ? baseWidth / cloud.width : 1;
             cloud.setScale(scale);
             
             cloud.speed = Phaser.Math.FloatBetween(0.3, 1.0);
@@ -67,20 +78,20 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // Castillo con proporción original
-        const castleTargetHeight = this.cameras.main.height / 2;
-        this.castle = this.add.image(this.cameras.main.width / 2, this.cameras.main.height, 'castle')
+        const castleTargetHeight = height / 2;
+        this.castle = this.add.image(width / 2, height, 'castle')
             .setOrigin(0.5, 1);
         const castleScale = castleTargetHeight / this.castle.height;
         this.castle.setScale(castleScale);
 
         // Árboles con proporción original
         const treeTargetHeight = 200;
-        const tree1 = this.add.image(this.cameras.main.width * 0.05, this.cameras.main.height, 'tree1')
+        const tree1 = this.add.image(width * 0.05, height, 'tree1')
             .setOrigin(0, 1);
         const tree1Scale = treeTargetHeight / tree1.height;
         tree1.setScale(tree1Scale);
         
-        const tree2 = this.add.image(this.cameras.main.width * 0.8, this.cameras.main.height, 'tree2')
+        const tree2 = this.add.image(width * 0.8, height, 'tree2')
             .setOrigin(0, 1);
         const tree2Scale = treeTargetHeight / tree2.height;
         tree2.setScale(tree2Scale);
@@ -92,12 +103,12 @@ export default class BaseScene extends Phaser.Scene {
         const fenceScale = fenceTargetHeight / tempFence.height;
         const fenceWidth = tempFence.width * fenceScale;
         const fenceSpacing = fenceWidth - 5;
-        const numFences = Math.ceil(this.cameras.main.width / fenceSpacing) + 1;
+        const numFences = Math.ceil(width / fenceSpacing) + 1;
         // Destruir la cerca temporal
         tempFence.destroy();
         
         for (let i = 0; i < numFences; i++) {
-            this.add.image(i * fenceSpacing, this.cameras.main.height, 'fence')
+            this.add.image(i * fenceSpacing, height, 'fence')
                 .setOrigin(0, 1)
                 .setScale(fenceScale);
         }
@@ -106,8 +117,8 @@ export default class BaseScene extends Phaser.Scene {
         const grassTargetHeight = 12;
         for (let i = 0; i < 10; i++) {
             const grassType = `grass${Phaser.Math.Between(1, 3)}`;
-            const xPos = i * (this.cameras.main.width / 10) + Phaser.Math.Between(-20, 20);
-            const grass = this.add.image(xPos, this.cameras.main.height, grassType)
+            const xPos = i * (width / 10) + Phaser.Math.Between(-20, 20);
+            const grass = this.add.image(xPos, height, grassType)
                 .setOrigin(0, 1);
             const grassScale = grassTargetHeight / grass.height;
             grass.setScale(grassScale);
@@ -119,12 +130,16 @@ export default class BaseScene extends Phaser.Scene {
 
     updateBackground() {
         // Mover las nubes
-        if (this.clouds) {
+        if (this.clouds && Array.isArray(this.clouds)) {
             this.clouds.forEach(cloud => {
-                cloud.x -= cloud.speed;
-                if (cloud.x + cloud.width < -200) {
-                    cloud.x = this.cameras.main.width + Phaser.Math.Between(100, 300);
-                    cloud.y = Phaser.Math.Between(30, 200);
+                if (cloud && cloud.active) {  // Verificar que la nube existe y está activa
+                    cloud.x -= cloud.speed;
+                    // Usar getBounds() para obtener las dimensiones actuales
+                    const bounds = cloud.getBounds();
+                    if (bounds && (cloud.x + bounds.width) < -200) {
+                        cloud.x = this.cameras.main.width + Phaser.Math.Between(100, 300);
+                        cloud.y = Phaser.Math.Between(30, 200);
+                    }
                 }
             });
         }
@@ -132,17 +147,27 @@ export default class BaseScene extends Phaser.Scene {
 
     shutdown() {
         // Limpiar eventos de update del fondo
-        this.events.off('update', this.updateBackground, this);
+        if (this.events) {
+            this.events.off('update', this.updateBackground, this);
+        }
         
         // Limpiar eventos de teclado
-        this.input.keyboard.removeAllListeners();
+        if (this.input && this.input.keyboard) {
+            this.input.keyboard.removeAllListeners();
+        }
         
         // Limpiar tweens
-        this.tweens.killAll();
+        if (this.tweens) {
+            this.tweens.killAll();
+        }
         
         // Limpiar nubes
-        if (this.clouds) {
-            this.clouds.forEach(cloud => cloud.destroy());
+        if (this.clouds && Array.isArray(this.clouds)) {
+            this.clouds.forEach(cloud => {
+                if (cloud && cloud.destroy) {
+                    cloud.destroy();
+                }
+            });
             this.clouds = [];
         }
     }
@@ -154,8 +179,39 @@ export default class BaseScene extends Phaser.Scene {
             if (this.music) this.music.stop();
             
             // Transición al menú usando el sistema de escenas de Phaser
-            this.scene.start('menu');
+            this.transitionToScene('menu');
         }
+    }
+
+    transitionToScene(targetScene) {
+        console.log(`\n=== TRANSICIÓN: ${this.scene.key} -> ${targetScene} ===`);
+        
+        // Detener la música si existe
+        if (this.music) {
+            this.music.stop();
+        }
+
+        // Asegurarnos que loading esté activa y al fondo
+        if (!this.scene.isActive('loading')) {
+            this.scene.launch('loading');
+            this.scene.sendToBack('loading');
+        }
+
+        // Detener todas las escenas activas excepto loading
+        this.scene.manager.scenes.forEach(scene => {
+            if (scene.scene.isActive() && scene.scene.key !== 'loading') {
+                scene.scene.stop();
+            }
+        });
+
+        // Iniciar la nueva escena
+        this.scene.start(targetScene);
+
+        // Log del estado final
+        const escenasActivas = this.scene.manager.scenes
+            .filter(s => s.scene.isActive())
+            .map(s => s.scene.key);
+        console.log('Escenas activas:', escenasActivas);
     }
 
     // Métodos de utilidad para crear elementos de UI con estilos mejorados

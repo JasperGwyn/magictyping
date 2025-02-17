@@ -105,14 +105,8 @@ export default class InstructionsScene extends BaseScene {
             // Detener la música actual si existe
             if (this.music) this.music.stop();
             
-            // Iniciar loading sin detener esta escena
-            this.scene.launch('loading');
-            
-            // Hacer fade out de esta escena
-            this.cameras.main.fadeOut(500, 0, 0, 0);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.stop();
-            });
+            // Transición a la escena de carga
+            this.transitionToScene('game', 500);
         });
     }
 } 

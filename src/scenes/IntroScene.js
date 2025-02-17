@@ -73,6 +73,9 @@ export default class IntroScene extends BaseScene {
             onComplete: () => {
                 this.startFloatingAnimation();
                 this.showCurrentText();
+                // Iniciar LoadingScene después de que la intro esté lista
+                this.scene.launch('loading');
+                this.scene.sendToBack('loading');
             }
         });
 
@@ -144,7 +147,7 @@ export default class IntroScene extends BaseScene {
         this.currentTextMain.setAlpha(0);
         this.pressSpaceText.setAlpha(0);
         
-        // Iniciamos la escena del menú manteniendo esta activa
-        this.scene.launch('menu');
+        // Transición al menú
+        this.transitionToScene('menu', 1000);
     }
 } 

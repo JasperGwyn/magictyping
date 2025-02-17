@@ -624,4 +624,21 @@ export default class GameScene extends BaseScene {
             this.scene.start('menu');
         });
     }
+
+    gameOver() {
+        this.isGameOver = true;
+        this.stopTimer();
+        this.saveGameResults();
+        this.transitionToScene('results');
+    }
+
+    handleTimeUp() {
+        this.isGameOver = true;
+        this.saveGameResults();
+        this.transitionToScene('results');
+    }
+
+    returnToMenu() {
+        this.transitionToScene('menu');
+    }
 } 

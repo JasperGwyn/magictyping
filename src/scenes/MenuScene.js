@@ -9,7 +9,7 @@ export default class MenuScene extends BaseScene {
 
     preload() {
         super.preload();
-        this.load.audio('menu_music', 'assets/sounds/music/menu.mp3');
+        // Solo cargar la música del intro que sabemos que existe
         this.load.audio('intro_music', 'assets/sounds/music/intro.mp3');
         this.load.image('wizard', 'assets/images/characters/wizard.png');
     }
@@ -26,18 +26,15 @@ export default class MenuScene extends BaseScene {
         console.log('Sonidos activos:', allSounds.filter(sound => sound.isPlaying));
         
         const isAnyMusicPlaying = allSounds.some(sound => 
-            (sound.key === 'intro_music' || sound.key === 'menu_music') && 
-            sound.isPlaying
+            sound.key === 'intro_music' && sound.isPlaying
         );
         
         console.log('isAnyMusicPlaying:', isAnyMusicPlaying);
         
         // Solo inicializar música si no hay ninguna sonando
         if (!isAnyMusicPlaying) {
-            // Usar la música que ya esté cargada (intro o menu)
-            const musicKey = this.cache.audio.exists('menu_music') ? 'menu_music' : 'intro_music';
-            console.log('Iniciando nueva música:', musicKey);
-            this.music = this.sound.add(musicKey, {
+            console.log('Iniciando música del intro');
+            this.music = this.sound.add('intro_music', {
                 volume: 0.5,
                 loop: true
             });
@@ -130,9 +127,7 @@ export default class MenuScene extends BaseScene {
         }
 
         // Transición limpia a la siguiente escena
-        this.scene.stop('intro');    // Asegurarnos que la intro esté detenida
-        this.scene.stop('menu');     // Detener esta escena
-        this.scene.start('instructions'); // Iniciar la nueva escena
+        this.transitionToScene('instructions');
     }
 
     shutdown() {

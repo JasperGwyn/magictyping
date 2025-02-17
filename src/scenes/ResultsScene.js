@@ -103,7 +103,7 @@ export default class ResultsScene extends BaseScene {
             // Detener la música actual
             if (this.music) this.music.stop();
             // Transición al menú
-            this.scene.start('menu');
+            this.returnToMenu();
         }
     }
 
@@ -298,6 +298,13 @@ export default class ResultsScene extends BaseScene {
         });
         
         console.log('Score guardado, mostrando leaderboard');
+    }
+
+    returnToMenu() {
+        if (this.music) {
+            this.music.stop();
+        }
+        this.transitionToScene('menu');
     }
 
     shutdown() {
