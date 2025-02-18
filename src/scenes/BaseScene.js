@@ -3,6 +3,8 @@ import { SCREEN_CONFIG } from '../config/gameConfig';
 export default class BaseScene extends Phaser.Scene {
     constructor(key) {
         super(key);
+        this.isUpdateBackgroundBound = false;
+        this.introMusicScenes = ['intro', 'menu', 'instructions'];
     }
 
     preload() {
@@ -36,6 +38,11 @@ export default class BaseScene extends Phaser.Scene {
     }
 
     initBackground() {
+        // Limpiar eventos anteriores si existen
+        if (this.isUpdateBackgroundBound) {
+            this.events.off('update', this.updateBackground, this);
+        }
+
         // Asegurarnos que tenemos las dimensiones correctas
         const width = this.cameras.main.width || SCREEN_CONFIG.WIDTH;
         const height = this.cameras.main.height || SCREEN_CONFIG.HEIGHT;
@@ -126,6 +133,7 @@ export default class BaseScene extends Phaser.Scene {
 
         // Evento de update para las nubes
         this.events.on('update', this.updateBackground, this);
+        this.isUpdateBackgroundBound = true;
     }
 
     updateBackground() {
@@ -147,13 +155,9 @@ export default class BaseScene extends Phaser.Scene {
 
     shutdown() {
         // Limpiar eventos de update del fondo
-        if (this.events) {
+        if (this.events && this.isUpdateBackgroundBound) {
             this.events.off('update', this.updateBackground, this);
-        }
-        
-        // Limpiar eventos de teclado
-        if (this.input && this.input.keyboard) {
-            this.input.keyboard.removeAllListeners();
+            this.isUpdateBackgroundBound = false;
         }
         
         // Limpiar tweens
@@ -175,19 +179,51 @@ export default class BaseScene extends Phaser.Scene {
     handleKeyDown(event) {
         // Manejar tecla ESC para volver al menú
         if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.ESC) {
-            // Detener la música actual si existe
-            if (this.music) this.music.stop();
+            // Si ya estamos en el menú, solo lo recargamos
+            if (this.scene.key === 'menu') {
+                this.scene.restart();
+                return;
+            }
             
-            // Transición al menú usando el sistema de escenas de Phaser
-            this.transitionToScene('menu');
+            // Para otras escenas, procedemos con la transición normal al menú
+            const currentScene = this.scene.key;
+            
+            // Modificar el manejo de la música
+            if (this.music && !this.introMusicScenes.includes('menu')) {
+                this.music.stop();
+            }
+            
+            // Asegurarnos que loading esté activa y al fondo
+            if (!this.scene.isActive('loading')) {
+                this.scene.launch('loading');
+                this.scene.sendToBack('loading');
+            }
+
+            // Iniciar la nueva escena antes de detener la actual
+            this.scene.start('menu');
+
+            // Detener la escena actual
+            this.scene.stop(currentScene);
+
+            // Log del estado final
+            const escenasActivas = this.scene.manager.scenes
+                .filter(s => s.scene.isActive())
+                .map(s => s.scene.key);
+            console.log('Escenas activas:', escenasActivas);
         }
     }
 
     transitionToScene(targetScene) {
         console.log(`\n=== TRANSICIÓN: ${this.scene.key} -> ${targetScene} ===`);
         
-        // Detener la música si existe
-        if (this.music) {
+        const currentScene = this.scene.key;
+        
+        // Modificar el manejo de la música
+        // Solo detener la música si estamos cambiando entre grupos de escenas diferentes
+        const currentIsIntroScene = this.introMusicScenes.includes(currentScene);
+        const targetIsIntroScene = this.introMusicScenes.includes(targetScene);
+        
+        if (this.music && currentIsIntroScene !== targetIsIntroScene) {
             this.music.stop();
         }
 
@@ -197,15 +233,11 @@ export default class BaseScene extends Phaser.Scene {
             this.scene.sendToBack('loading');
         }
 
-        // Detener todas las escenas activas excepto loading
-        this.scene.manager.scenes.forEach(scene => {
-            if (scene.scene.isActive() && scene.scene.key !== 'loading') {
-                scene.scene.stop();
-            }
-        });
-
-        // Iniciar la nueva escena
+        // Iniciar la nueva escena antes de detener la actual
         this.scene.start(targetScene);
+
+        // Detener la escena actual
+        this.scene.stop(currentScene);
 
         // Log del estado final
         const escenasActivas = this.scene.manager.scenes
@@ -296,5 +328,26 @@ export default class BaseScene extends Phaser.Scene {
         texture.refresh();
         
         return this.add.image(width/2, height/2, 'gradientTexture');
+    }
+
+    // Agregar método helper para manejar la música
+    setupBackgroundMusic(key, volume = 1, loop = true) {
+        // Si ya existe música de intro en otra escena, no crear una nueva instancia
+        if (this.introMusicScenes.includes(this.scene.key)) {
+            const activeScenes = this.scene.manager.scenes.filter(s => s.scene.isActive());
+            const existingMusic = activeScenes.find(s => s.music && s.introMusicScenes.includes(s.scene.key));
+            
+            if (existingMusic) {
+                this.music = existingMusic.music;
+                return;
+            }
+        }
+
+        // Si no existe, crear nueva instancia
+        this.music = this.sound.add(key, {
+            volume: volume,
+            loop: loop
+        });
+        this.music.play();
     }
 } 

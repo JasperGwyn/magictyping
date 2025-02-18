@@ -50,12 +50,12 @@ export const PALABRAS_POR_NIVEL = {
 
 export const GAME_CONFIG = {
     VIDAS_INICIALES: 3,
-    VELOCIDAD_BASE: 200,        // Velocidad inicial de caída
-    FRECUENCIA_SPAWN: 4000,     // Tiempo entre palabras en milisegundos
-    INCREMENTO_VELOCIDAD: 1.1,  // Multiplicador de velocidad por nivel
-    INCREMENTO_FRECUENCIA: 1.5, // Multiplicador de frecuencia por nivel
-    PALABRAS_POR_NIVEL: 5,      // Cantidad de palabras para pasar de nivel
-    PUNTOS_POR_LETRA: 10        // Puntos base por cada letra correcta
+    VELOCIDAD_BASE: parseInt(process.env.VELOCIDAD_BASE) || 200,        // Velocidad inicial de caída
+    FRECUENCIA_SPAWN: parseInt(process.env.FRECUENCIA_SPAWN) || 4000,     // Tiempo entre palabras en milisegundos
+    INCREMENTO_VELOCIDAD: parseFloat(process.env.INCREMENTO_VELOCIDAD) || 1.1,  // Multiplicador de velocidad por nivel
+    INCREMENTO_FRECUENCIA: parseFloat(process.env.INCREMENTO_FRECUENCIA) || 1.5, // Multiplicador de frecuencia por nivel
+    PALABRAS_POR_NIVEL: parseInt(process.env.PALABRAS_POR_NIVEL) || 5,      // Cantidad de palabras para pasar de nivel
+    PUNTOS_POR_LETRA: parseInt(process.env.PUNTOS_POR_LETRA) || 10        // Puntos base por cada letra correcta
 };
 
 export const SCREEN_CONFIG = {
