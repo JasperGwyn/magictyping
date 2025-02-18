@@ -1,38 +1,19 @@
-export const COLORS = {
-    NEGRO: '#000000',
-    BLANCO: '#FFFFFF',
-    ROJO: '#FF0000',
-    VERDE: '#00FF00',
-    AZUL: '#0000FF',
-    AMARILLO: '#FFFF00',
-    MEÑIQUE_IZQ: '#FF69B4',  // Rosa
-    ANULAR_IZQ: '#4B0082',   // Índigo
-    MEDIO_IZQ: '#9400D3',    // Violeta
-    INDICE_IZQ: '#0000FF',   // Azul
-    PULGAR_IZQ: '#FFFFFF',   // Blanco
-    INDICE_DER: '#00FF00',   // Verde
-    MEDIO_DER: '#FFFF00',    // Amarillo
-    ANULAR_DER: '#FFA500',   // Naranja
-    MEÑIQUE_DER: '#FF0000'   // Rojo
-};
-
-
 export const PALABRAS_POR_NIVEL = {
     1: {  // Nivel 1: Solo Dedos índices (posición base)
         palabras: ['JU', 'FU', 'RYU','VU','TU', 'GY','MU','MY','JUR','FUR','RYU','JUR','BU','BY','HY','HV'],
-        descripcion: 'POSICIÓN BASE - SOLO DEDOS ÍNDICES (F Y J)'
+        descripcion: 'POSICIÓN BASE - SOLO DEDOS ÍNDICES'
     },
     2: {  // Nivel 2: Solo Dedos medios
         palabras: ['DEDI', 'KIKE', 'DICE','DIKE','DECE','KEKE','KIKI','IKE','CEDEC'],
-        descripcion: 'SOLO DEDOS MEDIOS (D Y K)'
+        descripcion: 'SOLO DEDOS MEDIOS'
     },
     3: {  // Nivel 3: Solo Dedos anulares
         palabras: ['SOL', 'LOS', 'SOX','WOS','SOS','XOXO'],
-        descripcion: 'SOLO DEDOS ANULARES (S Y L)'
+        descripcion: 'SOLO DEDOS ANULARES'
     },
     4: {  // Nivel 4: Solo Dedos meñiques
         palabras: ['PAZ',  'PAQA','ZAP', 'PAQ','ÑAZ','QAPA','ÑAÑA','QAP'],
-        descripcion: 'SOLO DEDOS MEÑIQUES (Q Y P)'
+        descripcion: 'SOLO DEDOS MEÑIQUES'
     },
     5: {  // Nivel 5: Combinaciones índices y medios
         palabras: ['JUNTE', 'VERDE', 'TIENE', 'MENTE', 'VIENE', 'DICE', 'JEFE', 'MIDE', 'RINDE', 'CINE'],
@@ -50,15 +31,33 @@ export const PALABRAS_POR_NIVEL = {
 
 export const GAME_CONFIG = {
     VIDAS_INICIALES: 3,
-    VELOCIDAD_BASE: parseInt(process.env.VELOCIDAD_BASE) || 200,        // Velocidad inicial de caída
-    FRECUENCIA_SPAWN: parseInt(process.env.FRECUENCIA_SPAWN) || 4000,     // Tiempo entre palabras en milisegundos
-    INCREMENTO_VELOCIDAD: parseFloat(process.env.INCREMENTO_VELOCIDAD) || 1.1,  // Multiplicador de velocidad por nivel
-    INCREMENTO_FRECUENCIA: parseFloat(process.env.INCREMENTO_FRECUENCIA) || 1.5, // Multiplicador de frecuencia por nivel
-    PALABRAS_POR_NIVEL: parseInt(process.env.PALABRAS_POR_NIVEL) || 5,      // Cantidad de palabras para pasar de nivel
-    PUNTOS_POR_LETRA: parseInt(process.env.PUNTOS_POR_LETRA) || 10        // Puntos base por cada letra correcta
+    VELOCIDAD_BASE: parseInt(process.env.VELOCIDAD_BASE),        // Velocidad inicial de caída
+    FRECUENCIA_SPAWN: parseInt(process.env.FRECUENCIA_SPAWN),     // Tiempo entre palabras en milisegundos
+    INCREMENTO_VELOCIDAD: parseFloat(process.env.INCREMENTO_VELOCIDAD),  // Multiplicador de velocidad por nivel
+    INCREMENTO_FRECUENCIA: parseFloat(process.env.INCREMENTO_FRECUENCIA), // Multiplicador de frecuencia por nivel
+    PALABRAS_POR_NIVEL: parseInt(process.env.PALABRAS_POR_NIVEL),      // Cantidad de palabras para pasar de nivel
+    PUNTOS_POR_LETRA: parseInt(process.env.PUNTOS_POR_LETRA)        // Puntos base por cada letra correcta
 };
 
 export const SCREEN_CONFIG = {
     WIDTH: 800,
     HEIGHT: 600
+};
+
+export const DIFICULTADES = {
+    APRENDIZ: {
+        nombre: 'ESTUDIANTE DE MAGIA',
+        descripcion: 'Primeros pasos en el arte de la magia',
+        multiplicador: 0.7
+    },
+    MAGO: {
+        nombre: 'HECHICERO EXPERTO',
+        descripcion: 'Dominio avanzado de los hechizos',
+        multiplicador: 1.0
+    },
+    ENCANTADOR: {
+        nombre: 'ARCHIMAGO SUPREMO',
+        descripcion: 'Maestría total de las artes místicas',
+        multiplicador: 1.3
+    }
 }; 

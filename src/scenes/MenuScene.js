@@ -106,9 +106,11 @@ export default class MenuScene extends BaseScene {
             }
         });
 
-        // Configurar el evento de SPACE una sola vez
+        // Configurar el evento de SPACE y ENTER
         this.spaceKey = this.input.keyboard.addKey('SPACE');
+        this.enterKey = this.input.keyboard.addKey('ENTER');
         this.spaceKey.on('down', this.handleSpaceKey, this);
+        this.enterKey.on('down', this.handleSpaceKey, this);
 
         // Iniciar esta escena en modo transparente
         this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
@@ -127,7 +129,7 @@ export default class MenuScene extends BaseScene {
         }
 
         // Transición limpia a la siguiente escena
-        this.transitionToScene('instructions');
+        this.transitionToScene('difficulty');
     }
 
     shutdown() {
@@ -135,6 +137,10 @@ export default class MenuScene extends BaseScene {
         if (this.spaceKey) {
             this.spaceKey.removeAllListeners();
             this.spaceKey = null;
+        }
+        if (this.enterKey) {
+            this.enterKey.removeAllListeners();
+            this.enterKey = null;
         }
         
         if (this.music) {

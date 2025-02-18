@@ -5,6 +5,7 @@ import ResultsScene from './scenes/ResultsScene';
 import IntroScene from './scenes/IntroScene';
 import InstructionsScene from './scenes/InstructionsScene';
 import LoadingScene from './scenes/LoadingScene';
+import DifficultyScene from './scenes/DifficultyScene';
 import { SCREEN_CONFIG } from './config/gameConfig';
 
 // Configuración global del juego
@@ -29,7 +30,7 @@ const config = {
         pixelArt: true,
         roundPixels: true
     },
-    scene: [IntroScene, MenuScene, InstructionsScene, LoadingScene, GameScene, ResultsScene]
+    scene: [IntroScene, MenuScene, InstructionsScene, LoadingScene, GameScene, ResultsScene, DifficultyScene]
 };
 
 // Si hay una escena inicial especificada en las variables de entorno, usarla
@@ -39,7 +40,8 @@ if (process.env.START_SCENE) {
         'menu': MenuScene,
         'game': GameScene,
         'instructions': InstructionsScene,
-        'results': ResultsScene
+        'results': ResultsScene,
+        'difficulty': DifficultyScene
     };
     
     // Reorganizar las escenas para poner la escena inicial primero

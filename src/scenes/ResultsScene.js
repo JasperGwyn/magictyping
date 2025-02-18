@@ -64,6 +64,15 @@ export default class ResultsScene extends BaseScene {
 
         // Input handling
         this.input.keyboard.on('keydown', this.handleKeyInput, this);
+
+        // Evento de teclado para SPACE
+        const returnToMenu = () => {
+            if (this.music) this.music.stop();
+            this.transitionToScene('menu');
+        };
+
+        this.input.keyboard.on('keydown-SPACE', returnToMenu);
+        this.input.keyboard.on('keydown-ENTER', returnToMenu);
     }
 
     clearDisplayObjects() {

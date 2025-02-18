@@ -10,6 +10,7 @@
     "dev:instructions": "cross-env START_SCENE=instructions webpack serve --open",
     "dev:game": "cross-env START_SCENE=game webpack serve --open",
     "dev:results": "cross-env START_SCENE=results webpack serve --open",
+    "dev:difi": "cross-env START_SCENE=difficulty webpack serve --open",
     "build": "webpack --mode production"
   },
   "keywords": [],

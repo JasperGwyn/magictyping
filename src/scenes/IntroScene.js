@@ -86,6 +86,12 @@ export default class IntroScene extends BaseScene {
             }
         });
 
+        this.input.keyboard.on('keydown-ENTER', () => {
+            if (this.animationState === "WAIT") {
+                this.nextText();
+            }
+        });
+
         // Efecto de fade in al inicio
         this.cameras.main.fadeIn(1000, 0, 0, 0);
     }

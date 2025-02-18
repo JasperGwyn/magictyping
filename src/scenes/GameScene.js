@@ -17,6 +17,7 @@ export default class GameScene extends BaseScene {
         this.gameOver = false;
         this.canSpawnWords = false;
         this.nextSpawnTime = 0;  // Nuevo: tiempo exacto para el próximo spawn
+        this.difficultyMultiplier = 1.0;
     }
 
     init() {
@@ -33,6 +34,7 @@ export default class GameScene extends BaseScene {
         this.gameOver = false;
         this.canSpawnWords = false;
         this.nextSpawnTime = 0;
+        this.difficultyMultiplier = 1.0;
     }
 
     preload() {
@@ -132,6 +134,9 @@ export default class GameScene extends BaseScene {
         teclado.setScale(120 / teclado.width);
         teclado.setAlpha(0.8);
         teclado.setDepth(1);  // Depth bajo para que otros elementos aparezcan encima
+
+        // Obtener el multiplicador de velocidad de la dificultad seleccionada
+        this.difficultyMultiplier = this.registry.get('speedMultiplier') || 1.0;
     }
 
     createWizard() {
@@ -403,7 +408,7 @@ export default class GameScene extends BaseScene {
         this.words.push({
             container,
             text: word,
-            speed: GAME_CONFIG.VELOCIDAD_BASE * this.speedMultiplier
+            speed: GAME_CONFIG.VELOCIDAD_BASE * this.speedMultiplier * this.difficultyMultiplier
         });
     }
 
