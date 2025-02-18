@@ -1,3 +1,11 @@
+console.log('=== Debug Variables de Entorno ===');
+console.log('process.env.VELOCIDAD_BASE:', process.env.VELOCIDAD_BASE);
+console.log('process.env.FRECUENCIA_SPAWN:', process.env.FRECUENCIA_SPAWN);
+console.log('process.env.INCREMENTO_VELOCIDAD:', process.env.INCREMENTO_VELOCIDAD);
+console.log('process.env.INCREMENTO_FRECUENCIA:', process.env.INCREMENTO_FRECUENCIA);
+console.log('process.env.PALABRAS_POR_NIVEL:', process.env.PALABRAS_POR_NIVEL);
+console.log('process.env.PUNTOS_POR_LETRA:', process.env.PUNTOS_POR_LETRA);
+
 export const PALABRAS_POR_NIVEL = {
     1: {  // Nivel 1: Solo Dedos índices (posición base)
         palabras: ['JU', 'FU', 'RYU','VU','TU', 'GY','MU','MY','JUR','FUR','RYU','JUR','BU','BY','HY','HV'],
@@ -31,12 +39,12 @@ export const PALABRAS_POR_NIVEL = {
 
 export const GAME_CONFIG = {
     VIDAS_INICIALES: 3,
-    VELOCIDAD_BASE: parseInt(process.env.VELOCIDAD_BASE),        // Velocidad inicial de caída
-    FRECUENCIA_SPAWN: parseInt(process.env.FRECUENCIA_SPAWN),     // Tiempo entre palabras en milisegundos
-    INCREMENTO_VELOCIDAD: parseFloat(process.env.INCREMENTO_VELOCIDAD),  // Multiplicador de velocidad por nivel
-    INCREMENTO_FRECUENCIA: parseFloat(process.env.INCREMENTO_FRECUENCIA), // Multiplicador de frecuencia por nivel
-    PALABRAS_POR_NIVEL: parseInt(process.env.PALABRAS_POR_NIVEL),      // Cantidad de palabras para pasar de nivel
-    PUNTOS_POR_LETRA: parseInt(process.env.PUNTOS_POR_LETRA)        // Puntos base por cada letra correcta
+    VELOCIDAD_BASE: parseInt(process.env.VELOCIDAD_BASE),
+    FRECUENCIA_SPAWN: parseInt(process.env.FRECUENCIA_SPAWN),
+    INCREMENTO_VELOCIDAD: parseFloat(process.env.INCREMENTO_VELOCIDAD),
+    INCREMENTO_FRECUENCIA: parseFloat(process.env.INCREMENTO_FRECUENCIA),
+    PALABRAS_POR_NIVEL: parseInt(process.env.PALABRAS_POR_NIVEL),
+    PUNTOS_POR_LETRA: parseInt(process.env.PUNTOS_POR_LETRA)
 };
 
 export const SCREEN_CONFIG = {

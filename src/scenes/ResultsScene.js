@@ -13,6 +13,7 @@ export default class ResultsScene extends BaseScene {
         this.displayObjects = [];
         this.panel = null;
         this.previousScores = null;
+        this.canReturnToMenu = false;
     }
 
     preload() {
@@ -64,15 +65,6 @@ export default class ResultsScene extends BaseScene {
 
         // Input handling
         this.input.keyboard.on('keydown', this.handleKeyInput, this);
-
-        // Evento de teclado para SPACE
-        const returnToMenu = () => {
-            if (this.music) this.music.stop();
-            this.transitionToScene('menu');
-        };
-
-        this.input.keyboard.on('keydown-SPACE', returnToMenu);
-        this.input.keyboard.on('keydown-ENTER', returnToMenu);
     }
 
     clearDisplayObjects() {
@@ -98,7 +90,10 @@ export default class ResultsScene extends BaseScene {
                 this.waitingForName = false;
                 this.clearDisplayObjects();
                 this.saveScore().then(() => {
-                    this.showLeaderboard();
+                    this.showLeaderboard().then(() => {
+                        // Habilitar el retorno al menú después de mostrar el leaderboard
+                        this.canReturnToMenu = true;
+                    });
                 });
             } else if (event.key === 'Backspace') {
                 this.playerName = this.playerName.slice(0, -1);
@@ -107,11 +102,9 @@ export default class ResultsScene extends BaseScene {
                 this.playerName += event.key.toUpperCase();
                 this.updateNameText();
             }
-        } else if (event.key === ' ') {
+        } else if ((event.key === ' ' || event.key === 'Enter') && this.canReturnToMenu) {
             this.clearDisplayObjects();
-            // Detener la música actual
             if (this.music) this.music.stop();
-            // Transición al menú
             this.returnToMenu();
         }
     }

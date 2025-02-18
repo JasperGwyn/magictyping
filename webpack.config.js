@@ -37,7 +37,14 @@ const envVars = {
         NODE_ENV: env.NODE_ENV || 'development',
         START_SCENE: env.START_SCENE || null,
         EDGE_CONFIG: env.EDGE_CONFIG,
-        VERCEL_API_TOKEN: env.VERCEL_API_TOKEN
+        VERCEL_API_TOKEN: env.VERCEL_API_TOKEN,
+        // Game specific variables
+        VELOCIDAD_BASE: env.VELOCIDAD_BASE,
+        FRECUENCIA_SPAWN: env.FRECUENCIA_SPAWN,
+        INCREMENTO_VELOCIDAD: env.INCREMENTO_VELOCIDAD,
+        INCREMENTO_FRECUENCIA: env.INCREMENTO_FRECUENCIA,
+        PALABRAS_POR_NIVEL: env.PALABRAS_POR_NIVEL,
+        PUNTOS_POR_LETRA: env.PUNTOS_POR_LETRA
     })
 };
 

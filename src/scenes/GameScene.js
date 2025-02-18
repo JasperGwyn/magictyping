@@ -17,7 +17,7 @@ export default class GameScene extends BaseScene {
         this.gameOver = false;
         this.canSpawnWords = false;
         this.nextSpawnTime = 0;  // Nuevo: tiempo exacto para el próximo spawn
-        this.difficultyMultiplier = 1.0;
+        this.difficultyMultiplier = 1.0;  // Multiplicador de dificultad
     }
 
     init() {
@@ -135,8 +135,12 @@ export default class GameScene extends BaseScene {
         teclado.setAlpha(0.8);
         teclado.setDepth(1);  // Depth bajo para que otros elementos aparezcan encima
 
-        // Obtener el multiplicador de velocidad de la dificultad seleccionada
+        // Obtener y loguear el multiplicador de dificultad
         this.difficultyMultiplier = this.registry.get('speedMultiplier') || 1.0;
+        console.log('=== Debug Velocidad ===');
+        console.log('VELOCIDAD_BASE:', GAME_CONFIG.VELOCIDAD_BASE);
+        console.log('speedMultiplier:', this.speedMultiplier);
+        console.log('difficultyMultiplier:', this.difficultyMultiplier);
     }
 
     createWizard() {
@@ -405,11 +409,24 @@ export default class GameScene extends BaseScene {
             container.add(letterText);
         });
 
+        const velocidadBase = GAME_CONFIG.VELOCIDAD_BASE;
+        const velocidadNivel = this.speedMultiplier;
+        const velocidadDificultad = this.difficultyMultiplier;
+        
+        console.log('=== Debug Spawn Palabra ===');
+        console.log('VELOCIDAD_BASE:', velocidadBase, typeof velocidadBase);
+        console.log('speedMultiplier:', velocidadNivel, typeof velocidadNivel);
+        console.log('difficultyMultiplier:', velocidadDificultad, typeof velocidadDificultad);
+        
+        const velocidadFinal = velocidadBase * velocidadNivel * velocidadDificultad;
+
         this.words.push({
             container,
             text: word,
-            speed: GAME_CONFIG.VELOCIDAD_BASE * this.speedMultiplier * this.difficultyMultiplier
+            speed: velocidadFinal
         });
+
+        console.log('Velocidad final:', velocidadFinal);
     }
 
     getSpawnTime() {
