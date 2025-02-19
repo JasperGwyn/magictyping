@@ -10,8 +10,8 @@ export default class InstructionsScene extends BaseScene {
             "ESCRIBE LAS PALABRAS QUE CAEN\nY PRESIONA ENTER\n PARA QUE DESAPAREZCAN",
             "¡NO DEJES QUE LAS PALABRAS\nLLEGUEN AL PISO!"
         ];
-        this.currentScreen = 'instructions'; // Nueva propiedad para controlar la pantalla actual
-        this.instructionTexts = []; // Array para guardar las referencias a los textos
+        this.currentScreen = 'instructions'; // Para controlar qué pantalla mostrar
+        this.instructionTexts = [];
     }
 
     preload() {
@@ -23,15 +23,19 @@ export default class InstructionsScene extends BaseScene {
     create() {
         super.create();
 
-        // Agregar a Lupita en el centro
+        // Obtener el nombre del jugador y tipo de personaje del registro
+        const playerName = this.registry.get('playerName') || 'Lupita';
+        const characterType = this.registry.get('characterType') || 'wizard';
+
+        // Agregar el personaje seleccionado en el centro
         const wizardHeight = 150;
         this.wizard = this.add.image(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2,
-            'wizard'
+            characterType
         ).setOrigin(0.5);
 
-        // Ajustar el tamaño de Lupita
+        // Ajustar el tamaño del personaje
         const scale = wizardHeight / this.wizard.height;
         this.wizard.setScale(scale);
 
@@ -45,28 +49,57 @@ export default class InstructionsScene extends BaseScene {
             ease: 'Sine.InOut'
         });
 
-        // Panel semi-transparente para las instrucciones
-        const panelWidth = SCREEN_CONFIG.WIDTH * 0.8;
-        const panelHeight = SCREEN_CONFIG.HEIGHT * 0.7;
-        const panel = this.add.rectangle(
+        // Panel semi-transparente
+        this.panel = this.add.rectangle(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2,
-            panelWidth,
-            panelHeight,
+            SCREEN_CONFIG.WIDTH * 0.8,
+            SCREEN_CONFIG.HEIGHT * 0.8,
             0x000000,
-            0.5
+            0.7
         );
 
-        // Configuración simple de espaciado
+        // Mostrar la primera pantalla de instrucciones
+        this.showInstructionsScreen();
+
+        // Configurar evento de teclado
+        this.input.keyboard.on('keydown-SPACE', () => {
+            if (this.currentScreen === 'instructions') {
+                // Limpiar pantalla actual
+                this.clearCurrentScreen();
+                // Mostrar pantalla de teclado
+                this.currentScreen = 'keyboard';
+                this.showKeyboardScreen();
+            } else if (this.currentScreen === 'keyboard') {
+                // Ir al juego
+                if (this.music) this.music.stop();
+                this.transitionToScene('game', 500);
+            }
+        });
+
+        this.input.keyboard.on('keydown-ENTER', () => {
+            if (this.currentScreen === 'instructions') {
+                this.clearCurrentScreen();
+                this.currentScreen = 'keyboard';
+                this.showKeyboardScreen();
+            } else if (this.currentScreen === 'keyboard') {
+                if (this.music) this.music.stop();
+                this.transitionToScene('game', 500);
+            }
+        });
+    }
+
+    showInstructionsScreen() {
+        // Configuración de espaciado
         const fontSize = 20;
         const lineSpacing = 35;
-        const fixedParagraphHeight = 130; // Altura fija para cada párrafo
+        const fixedParagraphHeight = 130;
 
         // Calcular altura total y posición inicial
         const totalHeight = fixedParagraphHeight * this.instructions.length;
-        let startY = panel.y - (totalHeight / 2) + (fixedParagraphHeight / 2);
+        let startY = this.panel.y - (totalHeight / 2) + (fixedParagraphHeight / 2);
 
-        // Agregar instrucciones y guardar referencias
+        // Agregar instrucciones
         this.instructions.forEach(instruction => {
             const text = this.add.text(SCREEN_CONFIG.WIDTH / 2, startY, instruction, {
                 fontFamily: '"Press Start 2P"',
@@ -77,14 +110,14 @@ export default class InstructionsScene extends BaseScene {
             }).setOrigin(0.5);
             
             this.instructionTexts.push(text);
-            startY += fixedParagraphHeight; // Cada instrucción se posiciona 100px más abajo que la anterior
+            startY += fixedParagraphHeight;
         });
 
         // Texto de "Presiona ESPACIO"
         const pressSpaceText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT - 50,
-            'PRESIONA ESPACIO PARA COMENZAR',
+            'PRESIONA ESPACIO PARA CONTINUAR',
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
@@ -92,6 +125,7 @@ export default class InstructionsScene extends BaseScene {
                 align: 'center'
             }
         ).setOrigin(0.5);
+        this.instructionTexts.push(pressSpaceText);
 
         // Animación de parpadeo
         this.tweens.add({
@@ -101,15 +135,6 @@ export default class InstructionsScene extends BaseScene {
             yoyo: true,
             repeat: -1
         });
-
-        // Evento de teclado para SPACE
-        const advanceScene = () => {
-            if (this.music) this.music.stop();
-            this.transitionToScene('game', 500);
-        };
-
-        this.input.keyboard.on('keydown-SPACE', advanceScene);
-        this.input.keyboard.on('keydown-ENTER', advanceScene);
     }
 
     clearCurrentScreen() {

@@ -6,7 +6,7 @@ export default class IntroScene extends BaseScene {
         super('intro');
         this.currentPage = 0;
         this.storyTexts = [
-            "¡HOLA! SOY LUPITA",
+            "¡HOLA! SOY {NOMBRE}",
             "QUIERO SER UNA GRAN MAGA",
             "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
             "¿ME AYUDAS?"
@@ -19,11 +19,21 @@ export default class IntroScene extends BaseScene {
     preload() {
         super.preload();
         this.load.image('wizard', 'assets/images/characters/wizard.png');
+        this.load.image('oldwizard', 'assets/images/characters/oldwizard.png');
         this.load.audio('intro_music', 'assets/sounds/music/intro.mp3');
     }
 
     create() {
         super.create();
+
+        // Obtener el nombre y tipo de personaje del jugador del registro
+        const playerName = this.registry.get('playerName') || 'LUPITA';
+        const characterType = this.registry.get('characterType') || 'wizard';
+
+        // Reemplazar {NOMBRE} en los textos con el nombre del jugador
+        this.storyTexts = this.storyTexts.map(text => 
+            text.replace('{NOMBRE}', playerName)
+        );
 
         // Iniciar música
         this.music = this.sound.add('intro_music', { 
@@ -33,7 +43,7 @@ export default class IntroScene extends BaseScene {
         this.music.play();
 
         // Agregar personaje inicialmente fuera de la pantalla
-        this.wizard = this.add.image(-100, SCREEN_CONFIG.HEIGHT / 2, 'wizard')
+        this.wizard = this.add.image(-100, SCREEN_CONFIG.HEIGHT / 2, characterType)
             .setScale(10)
             .setOrigin(0.5);
 

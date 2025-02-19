@@ -24,3 +24,6 @@ build/
 # Windows files
 *:Zone.Identifier 
 .vercel
+
+#imagenesquenousamos
+public/assets/images/archivo

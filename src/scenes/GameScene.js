@@ -81,8 +81,29 @@ export default class GameScene extends BaseScene {
         this.music = this.sound.add('game_music', { volume: 0.5, loop: true });
         this.music.play();
 
+        // Obtener el tipo de personaje seleccionado
+        const characterType = this.registry.get('characterType') || 'wizard';
+        const playerName = this.registry.get('playerName') || 'Lupita';
+
+        // Crear el personaje
+        this.wizard = this.add.image(
+            SCREEN_CONFIG.WIDTH - 100,  // A 100 pixels del borde derecho
+            SCREEN_CONFIG.HEIGHT - 100,
+            characterType
+        );
+        this.wizard.setScale(7);  // Escala fija de 5
+
+        // Animación de flotación para el personaje
+        this.tweens.add({
+            targets: this.wizard,
+            y: '+=20',
+            duration: 2000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.InOut'
+        });
+
         // Crear elementos visuales específicos del juego
-        this.createWizard();
         this.createUI();
 
         // Crear el texto de instrucción inicial
@@ -141,25 +162,6 @@ export default class GameScene extends BaseScene {
         console.log('VELOCIDAD_BASE:', GAME_CONFIG.VELOCIDAD_BASE);
         console.log('speedMultiplier:', this.speedMultiplier);
         console.log('difficultyMultiplier:', this.difficultyMultiplier);
-    }
-
-    createWizard() {
-        const wizardHeight = 120;
-        this.wizard = this.add.image(SCREEN_CONFIG.WIDTH - 100, SCREEN_CONFIG.HEIGHT - wizardHeight/2, 'wizard');
-        
-        // Ajustar el tamaño manteniendo la proporción
-        const scale = wizardHeight / this.wizard.height;
-        this.wizard.setScale(scale);
-        
-        // Animación flotante
-        this.tweens.add({
-            targets: this.wizard,
-            y: '-=20',
-            duration: 2000,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.inOut'
-        });
     }
 
     createUI() {

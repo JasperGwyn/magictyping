@@ -12,6 +12,7 @@ export default class MenuScene extends BaseScene {
         // Solo cargar la música del intro que sabemos que existe
         this.load.audio('intro_music', 'assets/sounds/music/intro.mp3');
         this.load.image('wizard', 'assets/images/characters/wizard.png');
+        this.load.image('oldwizard', 'assets/images/characters/oldwizard.png');
     }
 
     create() {
@@ -41,8 +42,12 @@ export default class MenuScene extends BaseScene {
             this.music.play();
         }
 
-        // Crear título con sombra
-        const titleText = "LA AVENTURA\nMÁGICA DE LUPITA";
+        // Obtener el nombre y tipo de personaje del jugador del registro
+        const playerName = this.registry.get('playerName') || 'LUPITA';
+        const characterType = this.registry.get('characterType') || 'wizard';
+        
+        // Crear título con sombra usando el nombre del jugador
+        const titleText = `LA AVENTURA\nMÁGICA DE ${playerName}`;
         
         // Sombra del título
         const titleShadow = this.add.text(SCREEN_CONFIG.WIDTH / 2 + 2, 96, titleText, {
@@ -62,13 +67,13 @@ export default class MenuScene extends BaseScene {
             lineSpacing: 10
         }).setOrigin(0.5).setAlpha(0);
 
-        // Agregar a Lupita en la misma posición que en la intro
+        // Agregar el personaje seleccionado
         this.wizard = this.add.image(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2,
-            'wizard'
+            characterType
         ).setOrigin(0.5)
-         .setScale(10)  // Mismo tamaño que en la intro
+         .setScale(10)
          .setAlpha(0);
 
         // Texto de "Presiona ESPACIO"
