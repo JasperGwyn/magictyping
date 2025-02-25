@@ -18,8 +18,8 @@ export default class PlayerCustomizationScene extends BaseScene {
 
     preload() {
         super.preload();
-        this.load.image('wizard', 'assets/images/characters/wizard.png');
-        this.load.image('oldwizard', 'assets/images/characters/oldwizard.png');
+        this.load.image('wizard', 'assets/images/characters/she.png');
+        this.load.image('oldwizard', 'assets/images/characters/he.png');
     }
 
     create() {
@@ -30,7 +30,7 @@ export default class PlayerCustomizationScene extends BaseScene {
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2,
             SCREEN_CONFIG.WIDTH * 0.8,
-            SCREEN_CONFIG.HEIGHT * 0.8,
+            SCREEN_CONFIG.HEIGHT * 0.75,
             0x000000,
             0.7
         );
@@ -112,24 +112,7 @@ export default class PlayerCustomizationScene extends BaseScene {
         ).setScale(7);
         this.displayObjects.push(this.oldWizardSprite);
 
-        // Textos debajo de los sprites
-        this.displayObjects.push(
-            this.add.text(this.wizardSprite.x, spriteY + 100, 'JOVEN', {
-                fontFamily: '"Press Start 2P"',
-                fontSize: '16px',
-                fill: '#ffffff',
-                align: 'center'
-            }).setOrigin(0.5)
-        );
 
-        this.displayObjects.push(
-            this.add.text(this.oldWizardSprite.x, spriteY + 100, 'SABIO', {
-                fontFamily: '"Press Start 2P"',
-                fontSize: '16px',
-                fill: '#ffffff',
-                align: 'center'
-            }).setOrigin(0.5)
-        );
 
         // Texto de continuar
         const continueText = this.add.text(

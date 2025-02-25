@@ -4,7 +4,7 @@ export default class BaseScene extends Phaser.Scene {
     constructor(key) {
         super(key);
         this.isUpdateBackgroundBound = false;
-        this.introMusicScenes = ['intro', 'menu', 'instructions'];
+        this.introMusicScenes = ['intro', 'title', 'instructions'];
     }
 
     preload() {
@@ -17,7 +17,12 @@ export default class BaseScene extends Phaser.Scene {
             // Cargar todos los assets necesarios para el fondo
             this.load.image('castle', 'assets/images/backgrounds/castle.png');
             this.load.image('sun', 'assets/images/backgrounds/sun.png');
-            this.load.image('cloud1', 'assets/images/backgrounds/cloud1.png');
+            
+            // Cargar todas las variantes de nubes
+            for (let i = 1; i <= 9; i++) {
+                this.load.image(`cloud${i}`, `assets/images/backgrounds/cloud${i}.png`);
+            }
+            
             this.load.image('tree1', 'assets/images/backgrounds/tree1.png');
             this.load.image('tree2', 'assets/images/backgrounds/tree2.png');
             this.load.image('fence', 'assets/images/backgrounds/fence.png');
@@ -70,15 +75,23 @@ export default class BaseScene extends Phaser.Scene {
         this.clouds = [];
         for (let i = 0; i < 5; i++) {
             const baseWidth = 200;
+            
+            // Seleccionar aleatoriamente una de las 9 nubes
+            const cloudNumber = Phaser.Math.Between(1, 9);
+            const cloudTexture = `cloud${cloudNumber}`;
+            
             const cloud = this.add.image(
                 Phaser.Math.Between(0, width),
                 Phaser.Math.Between(30, 200),
-                'cloud1'
+                cloudTexture
             );
             
             // Mantener proporción original
             const scale = cloud.width ? baseWidth / cloud.width : 1;
-            cloud.setScale(scale);
+            
+            // Aplicar variación aleatoria de tamaño entre 80% y 120%
+            const sizeVariation = Phaser.Math.FloatBetween(0.8, 1.2);
+            cloud.setScale(scale * sizeVariation);
             
             cloud.speed = Phaser.Math.FloatBetween(0.3, 1.0);
             this.clouds.push(cloud);
@@ -177,19 +190,19 @@ export default class BaseScene extends Phaser.Scene {
     }
 
     handleKeyDown(event) {
-        // Manejar tecla ESC para volver al menú
+        // Manejar tecla ESC para volver a la pantalla de título
         if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.ESC) {
-            // Si ya estamos en el menú, solo lo recargamos
-            if (this.scene.key === 'menu') {
+            // Si ya estamos en la pantalla de título, solo la recargamos
+            if (this.scene.key === 'title') {
                 this.scene.restart();
                 return;
             }
             
-            // Para otras escenas, procedemos con la transición normal al menú
+            // Para otras escenas, procedemos con la transición normal a la pantalla de título
             const currentScene = this.scene.key;
             
             // Modificar el manejo de la música
-            if (this.music && !this.introMusicScenes.includes('menu')) {
+            if (this.music && !this.introMusicScenes.includes('title')) {
                 this.music.stop();
             }
             
@@ -197,13 +210,18 @@ export default class BaseScene extends Phaser.Scene {
             if (!this.scene.isActive('loading')) {
                 this.scene.launch('loading');
                 this.scene.sendToBack('loading');
+            } else {
+                // Si ya está activa, asegurarnos que esté en el fondo
+                this.scene.sendToBack('loading');
             }
 
             // Iniciar la nueva escena antes de detener la actual
-            this.scene.start('menu');
+            this.scene.start('title');
 
-            // Detener la escena actual
-            this.scene.stop(currentScene);
+            // Detener la escena actual, pero nunca la escena de loading
+            if (currentScene !== 'loading') {
+                this.scene.stop(currentScene);
+            }
 
             // Log del estado final
             const escenasActivas = this.scene.manager.scenes
@@ -231,13 +249,18 @@ export default class BaseScene extends Phaser.Scene {
         if (!this.scene.isActive('loading')) {
             this.scene.launch('loading');
             this.scene.sendToBack('loading');
+        } else {
+            // Si ya está activa, asegurarnos que esté en el fondo
+            this.scene.sendToBack('loading');
         }
 
         // Iniciar la nueva escena antes de detener la actual
         this.scene.start(targetScene);
 
-        // Detener la escena actual
-        this.scene.stop(currentScene);
+        // Detener la escena actual, pero nunca la escena de loading
+        if (currentScene !== 'loading') {
+            this.scene.stop(currentScene);
+        }
 
         // Log del estado final
         const escenasActivas = this.scene.manager.scenes

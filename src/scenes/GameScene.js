@@ -40,7 +40,7 @@ export default class GameScene extends BaseScene {
     preload() {
         super.preload();
         // Cargar solo los assets específicos del juego
-        this.load.image('wizard', 'assets/images/characters/wizard.png');
+        this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.image('heart', 'assets/images/ui/heart.png');
         this.load.spritesheet('explosion', 'assets/images/effects/explosion.png', { 
             frameWidth: 32, 
@@ -663,6 +663,10 @@ export default class GameScene extends BaseScene {
     }
 
     returnToMenu() {
-        this.transitionToScene('menu');
+        console.log('Regresando al menú...');
+        if (this.music && this.music.isPlaying) {
+            this.music.stop();
+        }
+        this.transitionToScene('title');
     }
 } 

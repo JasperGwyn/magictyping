@@ -19,7 +19,7 @@ export default class ResultsScene extends BaseScene {
     preload() {
         super.preload();
         this.load.image('star', 'assets/images/ui/star.png');
-        this.load.image('wizard', 'assets/images/characters/wizard.png');
+        this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.audio('results_music', 'assets/sounds/music/endmusic.mp3', {
             instances: 1
         });
@@ -41,7 +41,7 @@ export default class ResultsScene extends BaseScene {
             SCREEN_CONFIG.WIDTH/2,
             SCREEN_CONFIG.HEIGHT/2,
             SCREEN_CONFIG.WIDTH * 0.9,  // Aumentado de 0.6 a 0.9
-            SCREEN_CONFIG.HEIGHT * 0.9,  // Aumentado de 0.7 a 0.9
+            SCREEN_CONFIG.HEIGHT * 0.7,  // Reducido de 0.9 a 0.8 para dejar espacio al texto inferior
             0x000000,
             0.7
         );
@@ -79,63 +79,63 @@ export default class ResultsScene extends BaseScene {
     async showResults(score, level, isHighScore) {
         const centerY = SCREEN_CONFIG.HEIGHT / 2;
         
-        // Título
+        // Título - posición ajustada
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 200, 
+            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 180, // Ajustado de -200 a -180
                 '¡PARTIDA TERMINADA!', {
                 fontFamily: '"Press Start 2P"',
-                fontSize: '32px',
+                fontSize: '28px',
                 fill: '#ffffff',
                 align: 'center'
             }).setOrigin(0.5)
         );
 
-        // Resumen de la partida
+        // Resumen de la partida - posición ajustada
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 120, 
+            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 110, // Ajustado de -120 a -110
                 `Nivel alcanzado: ${level}\nPuntuación final: ${score}`, {
                 fontFamily: '"Press Start 2P"',
-                fontSize: '24px',
+                fontSize: '20px',
                 fill: '#ffffff',
                 align: 'center',
-                lineSpacing: 20
+                lineSpacing: 15 // Reducido de 20 a 15
             }).setOrigin(0.5)
         );
 
-        // Mensaje de high score si corresponde
+        // Mensaje de high score si corresponde - posición ajustada
         if (isHighScore) {
             this.displayObjects.push(
-                this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 40, 
+                this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 35, // Ajustado de -40 a -35
                     '¡NUEVO HIGH SCORE!', {
                     fontFamily: '"Press Start 2P"',
-                    fontSize: '28px',
+                    fontSize: '24px',
                     fill: '#ffff00'
                 }).setOrigin(0.5)
             );
         }
 
-        // Mostrar leaderboard
+        // Mostrar leaderboard - posición ajustada
         const scores = await HighScores.get();
         if (scores && scores.length > 0) {
             // Título del leaderboard
             this.displayObjects.push(
-                this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 20,
+                this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 10, // Ajustado de +20 a +10
                     'MEJORES PUNTAJES', {
                     fontFamily: '"Press Start 2P"',
-                    fontSize: '24px',
+                    fontSize: '20px',
                     fill: '#ffffff'
                 }).setOrigin(0.5)
             );
 
-            // Mostrar los top 5 scores
+            // Mostrar los top 5 scores - posiciones ajustadas
             const topScores = scores.slice(0, 5);
             topScores.forEach((scoreData, index) => {
                 const scoreText = `${index + 1}. ${scoreData.name}: ${scoreData.score}`;
                 this.displayObjects.push(
-                    this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 60 + (index * 30),
+                    this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 45 + (index * 26), // Ajustado de +60 y espaciado 28 a +45 y espaciado 26
                         scoreText, {
                         fontFamily: '"Press Start 2P"',
-                        fontSize: '20px',
+                        fontSize: '18px',
                         fill: index === 0 ? '#ffff00' : '#ffffff'
                     }).setOrigin(0.5)
                 );
@@ -145,11 +145,11 @@ export default class ResultsScene extends BaseScene {
         // Texto para volver al menú
         const menuText = this.add.text(
             SCREEN_CONFIG.WIDTH/2,
-            SCREEN_CONFIG.HEIGHT - 50,
+            SCREEN_CONFIG.HEIGHT - 45, // Ajustado de -50 a -45
             'PRESIONA ESPACIO PARA VOLVER AL MENÚ',
             {
                 fontFamily: '"Press Start 2P"',
-                fontSize: '20px',
+                fontSize: '18px',
                 fill: '#ffffff'
             }
         ).setOrigin(0.5);
@@ -200,7 +200,12 @@ export default class ResultsScene extends BaseScene {
         if (this.music) {
             this.music.stop();
         }
-        this.transitionToScene('menu');
+        if (this.homeKey) {
+            this.homeKey.removeAllListeners();
+        }
+        
+        // Transición a la pantalla principal
+        this.transitionToScene('title');
     }
 
     shutdown() {

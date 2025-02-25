@@ -16,7 +16,7 @@ export default class InstructionsScene extends BaseScene {
 
     preload() {
         super.preload();
-        this.load.image('wizard', 'assets/images/characters/wizard.png');
+        this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.image('dedos_teclado', 'assets/images/ui/dedosteclado.png');
     }
 
@@ -54,7 +54,7 @@ export default class InstructionsScene extends BaseScene {
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2,
             SCREEN_CONFIG.WIDTH * 0.8,
-            SCREEN_CONFIG.HEIGHT * 0.8,
+            SCREEN_CONFIG.HEIGHT * 0.7,
             0x000000,
             0.7
         );
@@ -73,7 +73,7 @@ export default class InstructionsScene extends BaseScene {
             } else if (this.currentScreen === 'keyboard') {
                 // Ir al juego
                 if (this.music) this.music.stop();
-                this.transitionToScene('game', 500);
+                this.transitionToScene('game');
             }
         });
 
@@ -84,7 +84,7 @@ export default class InstructionsScene extends BaseScene {
                 this.showKeyboardScreen();
             } else if (this.currentScreen === 'keyboard') {
                 if (this.music) this.music.stop();
-                this.transitionToScene('game', 500);
+                this.transitionToScene('game');
             }
         });
     }

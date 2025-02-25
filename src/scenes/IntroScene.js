@@ -11,15 +11,15 @@ export default class IntroScene extends BaseScene {
             "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
             "¿ME AYUDAS?"
         ];
-        this.animationState = "FADE_IN";
+        //this.animationState = "FADE_IN";
         this.textAlpha = 0;
         this.useCommonBackground = true;
     }
 
     preload() {
         super.preload();
-        this.load.image('wizard', 'assets/images/characters/wizard.png');
-        this.load.image('oldwizard', 'assets/images/characters/oldwizard.png');
+        this.load.image('wizard', 'assets/images/characters/she.png');
+        this.load.image('oldwizard', 'assets/images/characters/he.png');
         this.load.audio('intro_music', 'assets/sounds/music/intro.mp3');
     }
 
@@ -103,7 +103,7 @@ export default class IntroScene extends BaseScene {
         });
 
         // Efecto de fade in al inicio
-        this.cameras.main.fadeIn(1000, 0, 0, 0);
+       // this.cameras.main.fadeIn(1000, 0, 0, 0);
     }
 
     startFloatingAnimation() {
@@ -163,7 +163,17 @@ export default class IntroScene extends BaseScene {
         this.currentTextMain.setAlpha(0);
         this.pressSpaceText.setAlpha(0);
         
-        // Transición al menú
-        this.transitionToScene('menu', 1000);
+        // Solo procesar si estamos en la escena de intro y está activa
+        if (this.scene.key !== 'intro' || !this.scene.isActive()) {
+            return;
+        }
+        
+        // Detener cualquier reproducción de audio si existe
+        if (this.typingSound && this.typingSound.isPlaying) {
+            this.typingSound.stop();
+        }
+        
+        // Transición a la pantalla de instrucciones
+        this.transitionToScene('instructions');
     }
 } 
