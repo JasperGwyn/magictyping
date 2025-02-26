@@ -32,20 +32,21 @@ const config = {
         roundPixels: true
     },
     scene: [
-        TitleScene,                // 0. Pantalla de título inicial
-        PlayerCustomizationScene,  // 1. Personalización del personaje
-        IntroScene,                // 2. Introducción
-        DifficultyScene,           // 3. Selección de dificultad
-        InstructionsScene,         // 4. Instrucciones
-        GameScene,                 // 5. Gameplay
-        ResultsScene,              // 6. Resultados
-        LoadingScene               // Escena de carga (cuando sea necesaria)
+        LoadingScene,              // 0. Escena de carga PRIMERO
+        TitleScene,                // 1. Pantalla de título inicial
+        PlayerCustomizationScene,  // 2. Personalización del personaje
+        IntroScene,                // 3. Introducción
+        DifficultyScene,           // 4. Selección de dificultad
+        InstructionsScene,         // 5. Instrucciones
+        GameScene,                 // 6. Gameplay
+        ResultsScene,              // 7. Resultados
     ]
 };
 
 // Si hay una escena inicial especificada en las variables de entorno, usarla
 if (process.env.START_SCENE) {
     const sceneMap = {
+        'loading': LoadingScene,    // Agregamos loading al mapa
         'title': TitleScene,
         'player-customization': PlayerCustomizationScene,
         'intro': IntroScene,
@@ -55,15 +56,24 @@ if (process.env.START_SCENE) {
         'results': ResultsScene
     };
     
-    // Reorganizar las escenas para poner la escena inicial primero
+    // Reorganizar las escenas para poner la escena inicial primero, pero mantener LoadingScene siempre
     const startScene = sceneMap[process.env.START_SCENE];
-    if (startScene) {
+    if (startScene && startScene !== LoadingScene) {
         config.scene = [
+            LoadingScene, // Siempre mantener LoadingScene primero
             startScene,
-            ...Object.values(sceneMap).filter(scene => scene !== startScene)
+            ...Object.values(sceneMap).filter(scene => scene !== startScene && scene !== LoadingScene)
         ];
     }
+
+    console.log('Escena inicial:', process.env.START_SCENE);
 }
 
 // Crear instancia de Phaser
-new Phaser.Game(config); 
+const game = new Phaser.Game(config);
+
+// Iniciar la escena especificada en las variables de entorno o la de título por defecto
+const startScene = process.env.START_SCENE || 'title';
+game.scene.start(startScene);
+
+console.log(`Juego inicializado con escena: ${startScene}`); 

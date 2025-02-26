@@ -371,6 +371,8 @@ export default class GameScene extends BaseScene {
         
         // Crear un contenedor para la palabra
         const container = this.add.container(x, 0);
+        // Asignar una profundidad mayor que la imagen de dedos (que tiene depth=1)
+        container.setDepth(10);
         
         // Definir colores por letra (usando los mismos del teclado)
         const letterColors = {

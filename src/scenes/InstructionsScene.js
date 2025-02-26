@@ -100,11 +100,11 @@ export default class InstructionsScene extends BaseScene {
         let startY = this.panel.y - (totalHeight / 2) + (fixedParagraphHeight / 2);
 
         // Agregar instrucciones
-        this.instructions.forEach(instruction => {
+        this.instructions.forEach((instruction, index) => {
             const text = this.add.text(SCREEN_CONFIG.WIDTH / 2, startY, instruction, {
                 fontFamily: '"Press Start 2P"',
                 fontSize: `${fontSize}px`,
-                color: '#ffffff',
+                color: index === 0 ? '#ffff00' : '#ffffff', // Primer texto en amarillo, resto en blanco
                 align: 'center',
                 lineSpacing: lineSpacing / 2
             }).setOrigin(0.5);

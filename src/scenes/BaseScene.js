@@ -245,28 +245,22 @@ export default class BaseScene extends Phaser.Scene {
             this.music.stop();
         }
 
-        // Asegurarnos que loading esté activa y al fondo
+        // Asegurarnos que loading esté activa y al fondo ANTES de cualquier transición
         if (!this.scene.isActive('loading')) {
             this.scene.launch('loading');
-            this.scene.sendToBack('loading');
-        } else {
-            // Si ya está activa, asegurarnos que esté en el fondo
-            this.scene.sendToBack('loading');
         }
+        
+        // Siempre enviar loading al fondo
+        this.scene.sendToBack('loading');
 
         // Iniciar la nueva escena antes de detener la actual
         this.scene.start(targetScene);
 
-        // Detener la escena actual, pero nunca la escena de loading
+        // IMPORTANTE: Nunca detener la escena de loading
+        // Detener la escena actual solo si no es loading
         if (currentScene !== 'loading') {
             this.scene.stop(currentScene);
         }
-
-        // Log del estado final
-        const escenasActivas = this.scene.manager.scenes
-            .filter(s => s.scene.isActive())
-            .map(s => s.scene.key);
-        console.log('Escenas activas:', escenasActivas);
     }
 
     // Métodos de utilidad para crear elementos de UI con estilos mejorados

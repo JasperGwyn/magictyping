@@ -7,7 +7,7 @@ export default class IntroScene extends BaseScene {
         this.currentPage = 0;
         this.storyTexts = [
             "¡HOLA! SOY {NOMBRE}",
-            "QUIERO SER UNA GRAN MAGA",
+            "QUIERO DOMINAR LA MAGIA",
             "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
             "¿ME AYUDAS?"
         ];
@@ -54,6 +54,7 @@ export default class IntroScene extends BaseScene {
             fontSize: '24px',
             color: '#000000', // Sombra
             align: 'center',
+            lineSpacing: 15,
             wordWrap: { width: SCREEN_CONFIG.WIDTH - 100 }
         }).setOrigin(0.5).setAlpha(0);
 
@@ -63,6 +64,7 @@ export default class IntroScene extends BaseScene {
             fontSize: '24px',
             color: '#ffffff',
             align: 'center',
+            lineSpacing: 15,
             wordWrap: { width: SCREEN_CONFIG.WIDTH - 100 }
         }).setOrigin(0.5).setAlpha(0);
 

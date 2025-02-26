@@ -39,22 +39,4 @@ export default class LoadingScene extends BaseScene {
             repeat: -1
         });
     }
-
-    shutdown() {
-        // Reactivar inmediatamente
-        this.scene.launch('loading');
-        this.scene.sendToBack('loading');
-    }
-
-    stop() {
-        // Reactivar inmediatamente
-        this.scene.launch('loading');
-        this.scene.sendToBack('loading');
-    }
-
-    pause() {
-        // Reactivar inmediatamente
-        this.scene.launch('loading');
-        this.scene.sendToBack('loading');
-    }
 } 

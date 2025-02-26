@@ -114,8 +114,32 @@ export default class ResultsScene extends BaseScene {
             );
         }
 
+        // Obtener el nombre del jugador actual
+        const playerName = this.registry.get('playerName') || 'LUPITA';
+
         // Mostrar leaderboard - posición ajustada
-        const scores = await HighScores.get();
+        let scores = await HighScores.get();
+        
+        // Verificar si el puntaje actual ya está en el leaderboard
+        const scoreAlreadyInLeaderboard = scores.some(s => s.name === playerName && s.score === score);
+        
+        // Si es un nuevo highscore pero no está en el leaderboard, lo agregamos manualmente
+        if (isHighScore && !scoreAlreadyInLeaderboard) {
+            console.log("Agregando manualmente el score al leaderboard para mostrar");
+            
+            // Crear objeto de puntaje para el jugador actual
+            const currentScoreData = {
+                name: playerName,
+                score: score
+            };
+            
+            // Agregar a la lista de puntajes y ordenar
+            scores.push(currentScoreData);
+            
+            // Ordenar puntajes de mayor a menor
+            scores.sort((a, b) => b.score - a.score);
+        }
+        
         if (scores && scores.length > 0) {
             // Título del leaderboard
             this.displayObjects.push(
@@ -129,14 +153,28 @@ export default class ResultsScene extends BaseScene {
 
             // Mostrar los top 5 scores - posiciones ajustadas
             const topScores = scores.slice(0, 5);
+            let foundCurrentScore = false; // Variable para rastrear si ya encontramos el score actual
+            
             topScores.forEach((scoreData, index) => {
                 const scoreText = `${index + 1}. ${scoreData.name}: ${scoreData.score}`;
+                
+                // Resaltar solo la primera coincidencia de nombre y puntaje
+                // que corresponde al puntaje que acaba de conseguir el jugador
+                const isCurrentPlayerScore = !foundCurrentScore && 
+                                           scoreData.name === playerName && 
+                                           scoreData.score === score;
+                
+                // Si este es el score actual, marcamos que ya lo encontramos
+                if (isCurrentPlayerScore) {
+                    foundCurrentScore = true;
+                }
+                
                 this.displayObjects.push(
                     this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 45 + (index * 26), // Ajustado de +60 y espaciado 28 a +45 y espaciado 26
                         scoreText, {
                         fontFamily: '"Press Start 2P"',
                         fontSize: '18px',
-                        fill: index === 0 ? '#ffff00' : '#ffffff'
+                        fill: isCurrentPlayerScore ? '#ffff00' : '#ffffff'
                     }).setOrigin(0.5)
                 );
             });

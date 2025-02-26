@@ -18,12 +18,6 @@ export default class TitleScene extends BaseScene {
     create() {
         super.create();
         
-        // Iniciar LoadingScene al iniciar la escena de título y mantenerla en el fondo
-        if (!this.scene.isActive('loading')) {
-            this.scene.launch('loading');
-            this.scene.sendToBack('loading');
-        }
-        
         // Verificar si hay alguna música sonando usando el sistema de sonido global
         const allSounds = this.sound.sounds;
         
@@ -108,6 +102,13 @@ export default class TitleScene extends BaseScene {
             alpha: 1,
             duration: 1000,
             onComplete: () => {
+                // Iniciar LoadingScene al terminar de mostrar los elementos visuales
+                if (!this.scene.isActive('loading')) {
+                    console.log('TitleScene: Iniciando LoadingScene en el fondo...');
+                    this.scene.launch('loading');
+                    this.scene.sendToBack('loading');
+                }
+                
                 // Animación de flotación para los personajes
                 this.tweens.add({
                     targets: this.wizard,
@@ -156,6 +157,22 @@ export default class TitleScene extends BaseScene {
             return;
         }
 
+        console.log('Presionada tecla SPACE/ENTER en TitleScene');
+        console.log('Escenas activas antes de transición:', 
+            this.scene.manager.scenes
+                .filter(s => s.scene.isActive())
+                .map(s => s.scene.key)
+        );
+
+        // Asegurarnos que loading esté activa
+        if (!this.scene.isActive('loading')) {
+            console.log('Loading no estaba activa, iniciándola');
+            this.scene.launch('loading');
+        }
+
+        // Enviar loading al fondo
+        this.scene.sendToBack('loading');
+
         // Detener la música si existe
         if (this.music) {
             this.music.stop();
@@ -163,6 +180,13 @@ export default class TitleScene extends BaseScene {
 
         // Transición limpia a la escena de personalización
         this.transitionToScene('player-customization');
+        
+        // Verificar escenas activas después de la transición
+        console.log('Escenas activas después de llamar a transitionToScene:', 
+            this.scene.manager.scenes
+                .filter(s => s.scene.isActive())
+                .map(s => s.scene.key)
+        );
     }
 
     shutdown() {

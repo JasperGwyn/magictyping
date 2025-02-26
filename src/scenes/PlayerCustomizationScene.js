@@ -25,19 +25,29 @@ export default class PlayerCustomizationScene extends BaseScene {
     create() {
         super.create();
 
+        // Asegurarnos que LoadingScene esté activa
+        if (!this.scene.isActive('loading')) {
+            console.log('PlayerCustomizationScene: LoadingScene no está activa, iniciándola...');
+            this.scene.launch('loading');
+            this.scene.sendToBack('loading');
+        } else {
+            console.log('PlayerCustomizationScene: LoadingScene ya está activa');
+            this.scene.sendToBack('loading');
+        }
+
         // Panel semi-transparente
         this.panel = this.add.rectangle(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2,
             SCREEN_CONFIG.WIDTH * 0.8,
-            SCREEN_CONFIG.HEIGHT * 0.75,
+            SCREEN_CONFIG.HEIGHT * 0.7,
             0x000000,
             0.7
         );
 
         // Título
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH / 2, 100, '¡PERSONALIZA TU PERSONAJE!', {
+            this.add.text(SCREEN_CONFIG.WIDTH / 2, 120, '¡PERSONALIZA TU PERSONAJE!', {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
                 fill: '#ffffff'
@@ -111,8 +121,6 @@ export default class PlayerCustomizationScene extends BaseScene {
             'oldwizard'
         ).setScale(7);
         this.displayObjects.push(this.oldWizardSprite);
-
-
 
         // Texto de continuar
         const continueText = this.add.text(
