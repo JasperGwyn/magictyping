@@ -1,17 +1,12 @@
 import BaseScene from './BaseScene';
 import { SCREEN_CONFIG } from '../config/gameConfig';
+import i18n from '../services/localization';
 
 export default class IntroScene extends BaseScene {
     constructor() {
         super('intro');
         this.currentPage = 0;
-        this.storyTexts = [
-            "¡HOLA! SOY {NOMBRE}",
-            "QUIERO DOMINAR LA MAGIA",
-            "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
-            "¿ME AYUDAS?"
-        ];
-        //this.animationState = "FADE_IN";
+        this.storyTexts = [];
         this.textAlpha = 0;
         this.useCommonBackground = true;
     }
@@ -30,10 +25,13 @@ export default class IntroScene extends BaseScene {
         const playerName = this.registry.get('playerName') || 'LUPITA';
         const characterType = this.registry.get('characterType') || 'wizard';
 
-        // Reemplazar {NOMBRE} en los textos con el nombre del jugador
-        this.storyTexts = this.storyTexts.map(text => 
-            text.replace('{NOMBRE}', playerName)
-        );
+        // Inicializar storyTexts usando el servicio de localización
+        this.storyTexts = [
+            i18n.getText('scenes.intro.greetings', { nombre: playerName }),
+            i18n.getText('scenes.intro.desire'),
+            i18n.getText('scenes.intro.challenge'),
+            i18n.getText('scenes.intro.request')
+        ];
 
         // Iniciar música
         this.music = this.sound.add('intro_music', { 
@@ -69,7 +67,7 @@ export default class IntroScene extends BaseScene {
         }).setOrigin(0.5).setAlpha(0);
 
         // Texto de "Presiona ESPACIO"
-        this.pressSpaceText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 80, 'PRESIONA ESPACIO', {
+        this.pressSpaceText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 80, i18n.getText('scenes.intro.pressSpace'), {
             fontFamily: '"Press Start 2P"',
             fontSize: '20px',
             color: '#ffffff',

@@ -1,6 +1,7 @@
 import BaseScene from './BaseScene';
 import { SCREEN_CONFIG, PALABRAS_POR_NIVEL } from '../config/gameConfig';
 import { HighScores } from '../services/storage/scores';
+import i18n from '../services/localization';
 
 export default class ResultsScene extends BaseScene {
     constructor() {
@@ -82,7 +83,7 @@ export default class ResultsScene extends BaseScene {
         // Título - posición ajustada
         this.displayObjects.push(
             this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 180, // Ajustado de -200 a -180
-                '¡PARTIDA TERMINADA!', {
+                i18n.getText('scenes.results.gameOver'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '28px',
                 fill: '#ffffff',
@@ -93,7 +94,7 @@ export default class ResultsScene extends BaseScene {
         // Resumen de la partida - posición ajustada
         this.displayObjects.push(
             this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 110, // Ajustado de -120 a -110
-                `Nivel alcanzado: ${level}\nPuntuación final: ${score}`, {
+                i18n.getText('scenes.results.summary', { level: level, score: score }), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 fill: '#ffffff',
@@ -106,7 +107,7 @@ export default class ResultsScene extends BaseScene {
         if (isHighScore) {
             this.displayObjects.push(
                 this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 35, // Ajustado de -40 a -35
-                    '¡NUEVO HIGH SCORE!', {
+                    i18n.getText('scenes.results.newHighScore'), {
                     fontFamily: '"Press Start 2P"',
                     fontSize: '24px',
                     fill: '#ffff00'
@@ -144,7 +145,7 @@ export default class ResultsScene extends BaseScene {
             // Título del leaderboard
             this.displayObjects.push(
                 this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 10, // Ajustado de +20 a +10
-                    'MEJORES PUNTAJES', {
+                    i18n.getText('scenes.results.leaderboard'), {
                     fontFamily: '"Press Start 2P"',
                     fontSize: '20px',
                     fill: '#ffffff'
@@ -184,7 +185,7 @@ export default class ResultsScene extends BaseScene {
         const menuText = this.add.text(
             SCREEN_CONFIG.WIDTH/2,
             SCREEN_CONFIG.HEIGHT - 45, // Ajustado de -50 a -45
-            'PRESIONA ESPACIO PARA VOLVER AL MENÚ',
+            i18n.getText('scenes.results.returnToMenu'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '18px',

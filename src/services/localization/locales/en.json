@@ -14,6 +14,9 @@
     }
   },
   "scenes": {
+    "loading": {
+      "text": "LOADING..."
+    },
     "title": {
       "pressStart": "PRESS SPACE TO START"
     },

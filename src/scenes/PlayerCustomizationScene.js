@@ -1,5 +1,6 @@
 import BaseScene from './BaseScene';
 import { SCREEN_CONFIG } from '../config/gameConfig';
+import i18n from '../services/localization';
 
 export default class PlayerCustomizationScene extends BaseScene {
     constructor() {
@@ -47,7 +48,7 @@ export default class PlayerCustomizationScene extends BaseScene {
 
         // Título
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH / 2, 120, '¡PERSONALIZA TU PERSONAJE!', {
+            this.add.text(SCREEN_CONFIG.WIDTH / 2, 120, i18n.getText('scenes.playerCustomization.title'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
                 fill: '#ffffff'
@@ -56,7 +57,7 @@ export default class PlayerCustomizationScene extends BaseScene {
 
         // Texto para ingresar nombre
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH / 2, 180, 'INGRESA TU NOMBRE:', {
+            this.add.text(SCREEN_CONFIG.WIDTH / 2, 180, i18n.getText('scenes.playerCustomization.enterName'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 fill: '#ffff00'
@@ -95,7 +96,7 @@ export default class PlayerCustomizationScene extends BaseScene {
 
         // Texto para selección de personaje
         this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH / 2, 300, 'ELIGE TU PERSONAJE: (← →)', {
+            this.add.text(SCREEN_CONFIG.WIDTH / 2, 300, i18n.getText('scenes.playerCustomization.chooseCharacter'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 fill: '#ffff00'
@@ -126,7 +127,7 @@ export default class PlayerCustomizationScene extends BaseScene {
         const continueText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT - 50,
-            'PRESIONA ENTER PARA CONTINUAR',
+            i18n.getText('scenes.playerCustomization.continue'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',

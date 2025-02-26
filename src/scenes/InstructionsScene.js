@@ -1,15 +1,12 @@
 import BaseScene from './BaseScene';
 import { SCREEN_CONFIG } from '../config/gameConfig';
+import i18n from '../services/localization';
 
 export default class InstructionsScene extends BaseScene {
     constructor() {
         super('instructions');
         this.useCommonBackground = true;
-        this.instructions = [
-            "¡BIENVENIDO A LA AVENTURA!",
-            "ESCRIBE LAS PALABRAS QUE CAEN\nY PRESIONA ENTER\n PARA QUE DESAPAREZCAN",
-            "¡NO DEJES QUE LAS PALABRAS\nLLEGUEN AL PISO!"
-        ];
+        this.instructions = [];
         this.currentScreen = 'instructions'; // Para controlar qué pantalla mostrar
         this.instructionTexts = [];
     }
@@ -22,6 +19,13 @@ export default class InstructionsScene extends BaseScene {
 
     create() {
         super.create();
+
+        // Inicializar las instrucciones usando el servicio de localización
+        this.instructions = [
+            i18n.getText('scenes.instructions.welcome'),
+            i18n.getText('scenes.instructions.typing'),
+            i18n.getText('scenes.instructions.warning')
+        ];
 
         // Obtener el nombre del jugador y tipo de personaje del registro
         const playerName = this.registry.get('playerName') || 'Lupita';
@@ -117,7 +121,7 @@ export default class InstructionsScene extends BaseScene {
         const pressSpaceText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT - 50,
-            'PRESIONA ESPACIO PARA CONTINUAR',
+            i18n.getText('scenes.instructions.continue'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
@@ -160,7 +164,7 @@ export default class InstructionsScene extends BaseScene {
         const explanationText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT / 2 + 130,  // Ajustado para estar debajo del teclado
-            '¡CADA DEDO DEBE PRESIONAR LAS TECLAS\nDE SU MISMO COLOR!',
+            i18n.getText('scenes.instructions.fingers'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '16px',  // Reducido para mejor ajuste
@@ -174,7 +178,7 @@ export default class InstructionsScene extends BaseScene {
         const pressSpaceText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT - 50,
-            'PRESIONA ESPACIO PARA COMENZAR',
+            i18n.getText('scenes.instructions.start'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',

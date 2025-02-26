@@ -1,5 +1,6 @@
 import BaseScene from './BaseScene';
 import { COLORS, PALABRAS_POR_NIVEL, GAME_CONFIG, SCREEN_CONFIG } from '../config/gameConfig';
+import i18n from '../services/localization';
 
 export default class GameScene extends BaseScene {
     constructor() {
@@ -106,8 +107,8 @@ export default class GameScene extends BaseScene {
         // Crear elementos visuales específicos del juego
         this.createUI();
 
-        // Crear el texto de instrucción inicial
-        this.initialText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 50, 'Escribí las palabras que van cayendo\n y luego apretá ENTER', {
+        // Crear el texto de instrucción inicial usando el servicio de localización
+        this.initialText = this.add.text(SCREEN_CONFIG.WIDTH / 2, SCREEN_CONFIG.HEIGHT - 50, i18n.getText('scenes.game.instructions'), {
             fontFamily: '"Press Start 2P"',
             fontSize: '15px',
             color: '#ffffff',
@@ -177,8 +178,8 @@ export default class GameScene extends BaseScene {
         // Crear teclado visual
         this.createKeyboard();
 
-        // Crear texto de puntuación
-        this.scoreText = this.add.text(20, 20, `Puntuación: ${this.score}`, {
+        // Crear texto de puntuación usando el servicio de localización
+        this.scoreText = this.add.text(20, 20, i18n.getText('scenes.game.score', { score: this.score }), {
             fontFamily: '"Press Start 2P"',
             fontSize: '20px',
             fill: '#fff',
@@ -192,8 +193,8 @@ export default class GameScene extends BaseScene {
             }
         });
 
-        // Crear texto de nivel
-        this.levelText = this.add.text(20, 50, `Nivel: ${this.level}`, {
+        // Crear texto de nivel usando el servicio de localización
+        this.levelText = this.add.text(20, 50, i18n.getText('scenes.game.level', { level: this.level }), {
             fontFamily: '"Press Start 2P"',
             fontSize: '20px',
             fill: '#fff',
@@ -447,8 +448,9 @@ export default class GameScene extends BaseScene {
 
         const centerY = SCREEN_CONFIG.HEIGHT * 0.4;
 
-        // Texto del número de nivel
-        const levelTitle = this.add.text(SCREEN_CONFIG.WIDTH/2, centerY, `NIVEL ${this.level}`, {
+        // Texto del número de nivel usando el servicio de localización
+        const levelTitle = this.add.text(SCREEN_CONFIG.WIDTH/2, centerY, 
+            i18n.getText('scenes.game.level', { level: this.level }), {
             fontFamily: '"Press Start 2P"',
             fontSize: '28px',
             fill: '#fff',
@@ -456,7 +458,9 @@ export default class GameScene extends BaseScene {
         }).setOrigin(0.5);
 
         // Texto de la descripción
-        const descText = this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 60, PALABRAS_POR_NIVEL[this.level].descripcion, {
+        // Aquí usamos el formato levels.N.description que ya está estructurado en los archivos de traducción
+        const descText = this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 60, 
+            i18n.getText(`scenes.game.levels.${this.level}.description`), {
             fontFamily: '"Press Start 2P"',
             fontSize: '16px',
             fill: '#fff',
@@ -539,7 +543,8 @@ export default class GameScene extends BaseScene {
     }
 
     showGameOver() {
-        const gameOverText = this.add.text(SCREEN_CONFIG.WIDTH/2, SCREEN_CONFIG.HEIGHT/2, '¡GAME OVER!', {
+        const gameOverText = this.add.text(SCREEN_CONFIG.WIDTH/2, SCREEN_CONFIG.HEIGHT/2, 
+            i18n.getText('scenes.results.gameOver'), {
             fontFamily: '"Press Start 2P"',
             fontSize: '64px',
             fill: '#ff0000'
@@ -585,9 +590,9 @@ export default class GameScene extends BaseScene {
             this.nextSpawnTime = time + (GAME_CONFIG.FRECUENCIA_SPAWN / this.frequencyMultiplier);
         }
 
-        // Actualizar textos de UI
-        this.scoreText.setText(`Puntuación: ${this.score}`);
-        this.levelText.setText(`Nivel: ${this.level}`);
+        // Actualizar textos de UI usando el servicio de localización
+        this.scoreText.setText(i18n.getText('scenes.game.score', { score: this.score }));
+        this.levelText.setText(i18n.getText('scenes.game.level', { level: this.level }));
     }
 
     createExplosionEffect(x, y) {

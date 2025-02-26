@@ -1,5 +1,6 @@
 import BaseScene from './BaseScene';
 import { SCREEN_CONFIG, DIFICULTADES } from '../config/gameConfig';
+import i18n from '../services/localization';
 
 export default class DifficultyScene extends BaseScene {
     constructor() {
@@ -28,7 +29,7 @@ export default class DifficultyScene extends BaseScene {
         this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT * 0.25,
-            'ELIGE TU NIVEL DE PODER',
+            i18n.getText('scenes.difficulty.title'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
@@ -41,11 +42,20 @@ export default class DifficultyScene extends BaseScene {
         const spacing = 80;
         const startY = SCREEN_CONFIG.HEIGHT * 0.4;
         
+        // Mapeo de claves de dificultad a claves de traducción
+        const difficultyKeys = {
+            'APRENDIZ': 'apprentice',
+            'MAGO': 'wizard',
+            'ENCANTADOR': 'enchanter'
+        };
+        
         this.optionTexts = this.options.map(([key, difficulty], index) => {
             const container = this.add.container(SCREEN_CONFIG.WIDTH / 2, startY + (spacing * index));
-
-            // Título de la dificultad
-            const title = this.add.text(0, 0, difficulty.nombre, {
+            
+            // Obtener el nombre y descripción traducidos
+            const translationKey = difficultyKeys[key];
+            const title = this.add.text(0, 0, 
+                i18n.getText(`scenes.difficulty.levels.${translationKey}.name`), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 color: '#ffffff',
@@ -53,7 +63,8 @@ export default class DifficultyScene extends BaseScene {
             }).setOrigin(0.5);
 
             // Descripción de la dificultad
-            const desc = this.add.text(0, 30, difficulty.descripcion, {
+            const desc = this.add.text(0, 30, 
+                i18n.getText(`scenes.difficulty.levels.${translationKey}.description`), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '12px',
                 color: '#cccccc',
@@ -68,7 +79,7 @@ export default class DifficultyScene extends BaseScene {
         const pressSpaceText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
             SCREEN_CONFIG.HEIGHT - 50,
-            'USA ↑↓ PARA ELEGIR\nPULSA ESPACIO O ENTER PARA CONFIRMAR',
+            i18n.getText('scenes.difficulty.controls'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',

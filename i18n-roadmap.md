@@ -22,13 +22,13 @@ Este documento detalla el plan para implementar un sistema multilenguaje en Magi
 ## 2. Fase de Extracción e Implementación
 
 ### 2.1 Extracción de Textos
-- [ ] Extraer textos de TitleScene
-- [ ] Extraer textos de PlayerCustomizationScene
-- [ ] Extraer textos de IntroScene
-- [ ] Extraer textos de InstructionsScene
-- [ ] Extraer textos de GameScene
-- [ ] Extraer textos de ResultsScene
-- [ ] Extraer textos de otros componentes o escenas (DifficultyScene, etc.)
+- [x] Extraer textos de TitleScene
+- [x] Extraer textos de PlayerCustomizationScene
+- [x] Extraer textos de IntroScene
+- [x] Extraer textos de InstructionsScene
+- [x] Extraer textos de GameScene
+- [x] Extraer textos de ResultsScene
+- [x] Extraer textos de otros componentes o escenas (DifficultyScene, etc.)
 
 ### 2.2 Creación de Archivos de Idioma
 - [x] Crear archivo base español (es.json)
@@ -36,20 +36,20 @@ Este documento detalla el plan para implementar un sistema multilenguaje en Magi
 - [x] Preparar estructura para futuros idiomas
 
 ### 2.3 Modificación del Código
-- [ ] Reemplazar textos en TitleScene con llamadas al servicio de localización
-- [ ] Reemplazar textos en PlayerCustomizationScene
-- [ ] Reemplazar textos en IntroScene
-- [ ] Reemplazar textos en InstructionsScene
-- [ ] Reemplazar textos en GameScene
-- [ ] Reemplazar textos en ResultsScene
-- [ ] Reemplazar textos en otras escenas
+- [x] Reemplazar textos en TitleScene con llamadas al servicio de localización
+- [x] Reemplazar textos en PlayerCustomizationScene
+- [x] Reemplazar textos en IntroScene
+- [x] Reemplazar textos en InstructionsScene
+- [x] Reemplazar textos en GameScene
+- [x] Reemplazar textos en ResultsScene
+- [x] Reemplazar textos en otras escenas (DifficultyScene)
 
 ## 3. Fase de Experiencia de Usuario
 
 ### 3.1 Interfaz de Selección de Idioma
-- [ ] Diseñar selector de idiomas en el menú
-- [ ] Implementar UI para cambio de idioma
-- [ ] Guardar preferencias de idioma entre sesiones
+- [x] Diseñar selector de idiomas en el menú
+- [x] Implementar UI para cambio de idioma
+- [x] Guardar preferencias de idioma entre sesiones
 
 ### 3.2 Optimizaciones
 - [ ] Implementar carga asíncrona de archivos de idioma
@@ -96,11 +96,15 @@ Este documento detalla el plan para implementar un sistema multilenguaje en Magi
 - [2023-11-03] - Análisis de textos completo. Identificados todos los textos en las escenas del juego.
 - [2023-11-03] - Diseño de la estructura de archivos de idioma y servicio de localización.
 - [2023-11-04] - Implementación del servicio de localización y creación de archivos de idioma base (español e inglés).
+- [2023-11-05] - Modificación de escenas principales para usar el servicio de localización: TitleScene, PlayerCustomizationScene, IntroScene, InstructionsScene y ResultsScene.
+- [2023-11-06] - Finalización de la modificación de todas las escenas para usar el servicio de localización, incluyendo GameScene y DifficultyScene. Fase 2 completada.
+- [2023-11-07] - Implementado selector de idiomas en la pantalla de título con cambio dinámico entre español e inglés.
 
 ### Notas Técnicas:
 - Utilizaremos archivos JSON para almacenar las traducciones
-- Se implementará un servicio singleton para gestionar las traducciones
-- Las claves de traducción seguirán la convención: `escena.contexto.identificador`
+- Se ha implementado un servicio singleton para gestionar las traducciones
+- Las claves de traducción siguen la convención: `escena.contexto.identificador`
+- Se ha añadido inicialización del servicio de localización al inicio del juego en index.js
 
 ### Resultados del Análisis de Textos (1.1):
 

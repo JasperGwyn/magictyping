@@ -8,6 +8,81 @@ import DifficultyScene from './scenes/DifficultyScene';
 import PlayerCustomizationScene from './scenes/PlayerCustomizationScene';
 import TitleScene from './scenes/TitleScene';
 import { SCREEN_CONFIG } from './config/gameConfig';
+import i18n from './services/localization';
+
+// Fallback translations for critical UI elements
+const fallbackTranslations = {
+    en: {
+        metadata: {
+            language: "en",
+            displayName: "English",
+            direction: "ltr"
+        },
+        common: {
+            buttons: {
+                continue: "CONTINUE",
+                back: "BACK",
+                confirm: "CONFIRM",
+                pressSpace: "PRESS SPACE",
+                pressEnter: "PRESS ENTER"
+            }
+        },
+        scenes: {
+            title: {
+                pressStart: "PRESS SPACE TO START"
+            },
+            playerCustomization: {
+                title: "CUSTOMIZE YOUR CHARACTER!",
+                enterName: "ENTER YOUR NAME:",
+                chooseCharacter: "CHOOSE YOUR CHARACTER: (← →)",
+                continue: "PRESS ENTER TO CONTINUE"
+            },
+            // Minimal set of essential translations
+            intro: {
+                greetings: "HELLO! I'M {nombre}",
+                desire: "I WANT TO MASTER MAGIC",
+                challenge: "BUT FIRST I MUST LEARN TO TYPE!",
+                request: "WILL YOU HELP ME?",
+                pressSpace: "PRESS SPACE"
+            }
+        }
+    },
+    es: {
+        metadata: {
+            language: "es",
+            displayName: "Español",
+            direction: "ltr"
+        },
+        common: {
+            buttons: {
+                continue: "CONTINUAR",
+                back: "VOLVER",
+                confirm: "CONFIRMAR",
+                pressSpace: "PRESIONA ESPACIO",
+                pressEnter: "PRESIONA ENTER"
+            }
+        },
+        scenes: {
+            title: {
+                pressStart: "PRESIONA ESPACIO PARA COMENZAR"
+            },
+            playerCustomization: {
+                title: "¡PERSONALIZA TU PERSONAJE!",
+                enterName: "INGRESA TU NOMBRE:",
+                chooseCharacter: "ELIGE TU PERSONAJE: (← →)",
+                continue: "PRESIONA ENTER PARA CONTINUAR"
+            },
+            // Minimal set of essential translations
+            intro: {
+                greetings: "¡HOLA! SOY {nombre}",
+                desire: "QUIERO DOMINAR LA MAGIA",
+                challenge: "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
+                request: "¿ME AYUDAS?",
+                pressSpace: "PRESIONA ESPACIO"
+            }
+        }
+    }
+};
 
 // Configuración global del juego
 const config = {
@@ -69,11 +144,40 @@ if (process.env.START_SCENE) {
     console.log('Escena inicial:', process.env.START_SCENE);
 }
 
-// Crear instancia de Phaser
-const game = new Phaser.Game(config);
+// Inicializar el servicio de localización
+console.log('[index] Iniciando carga del servicio de localización');
+i18n.initialize().then(() => {
+    console.log(`[index] Idioma cargado: ${i18n.currentLanguage}`);
+    console.log('[index] Estado de traducciones:', {
+        idiomaCargado: i18n.currentLanguage,
+        idiomasDisponibles: Object.keys(i18n.translations),
+        traduccionesCargadas: i18n.isLoaded
+    });
+    
+    // Iniciar juego después de cargar idioma
+    initializeGame();
+}).catch(error => {
+    console.error('[index] Error inicializando el servicio de localización:', error);
+    console.log('[index] Usando traducciones de respaldo');
+    
+    // Usar fallback translations
+    i18n.initializeWithTranslations(fallbackTranslations, 'en');
+    
+    // Iniciar juego con traducciones de respaldo
+    initializeGame();
+});
 
-// Iniciar la escena especificada en las variables de entorno o la de título por defecto
-const startScene = process.env.START_SCENE || 'title';
-game.scene.start(startScene);
+/**
+ * Inicializa el juego con Phaser
+ */
+function initializeGame() {
+    console.log('[index] Creando instancia de Phaser');
+    const game = new Phaser.Game(config);
 
-console.log(`Juego inicializado con escena: ${startScene}`); 
+    // Iniciar la escena especificada en las variables de entorno o la de título por defecto
+    const startScene = process.env.START_SCENE || 'title';
+    console.log(`[index] Iniciando escena: ${startScene}`);
+    game.scene.start(startScene);
+
+    console.log(`[index] Juego inicializado con escena: ${startScene}`);
+} 
