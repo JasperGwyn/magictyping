@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "language": "es",
+    "displayName": "Español",
+    "direction": "ltr"
+  },
+  "common": {
+    "buttons": {
+      "continue": "CONTINUAR",
+      "back": "VOLVER",
+      "confirm": "CONFIRMAR",
+      "pressSpace": "PRESIONA ESPACIO",
+      "pressEnter": "PRESIONA ENTER"
+    }
+  },
+  "scenes": {
+    "title": {
+      "pressStart": "PRESIONA ESPACIO PARA COMENZAR"
+    },
+    "playerCustomization": {
+      "title": "¡PERSONALIZA TU PERSONAJE!",
+      "enterName": "INGRESA TU NOMBRE:",
+      "chooseCharacter": "ELIGE TU PERSONAJE: (← →)",
+      "continue": "PRESIONA ENTER PARA CONTINUAR"
+    },
+    "intro": {
+      "greetings": "¡HOLA! SOY {nombre}",
+      "desire": "QUIERO DOMINAR LA MAGIA",
+      "challenge": "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
+      "request": "¿ME AYUDAS?",
+      "pressSpace": "PRESIONA ESPACIO"
+    },
+    "instructions": {
+      "welcome": "¡BIENVENIDO A LA AVENTURA!",
+      "typing": "ESCRIBE LAS PALABRAS QUE CAEN\nY PRESIONA ENTER\nPARA QUE DESAPAREZCAN",
+      "warning": "¡NO DEJES QUE LAS PALABRAS\nLLEGUEN AL PISO!",
+      "fingers": "¡CADA DEDO DEBE PRESIONAR LAS TECLAS\nDE SU MISMO COLOR!",
+      "continue": "PRESIONA ESPACIO PARA CONTINUAR",
+      "start": "PRESIONA ESPACIO PARA COMENZAR"
+    },
+    "difficulty": {
+      "title": "ELIGE TU NIVEL DE PODER",
+      "levels": {
+        "apprentice": {
+          "name": "ESTUDIANTE DE MAGIA",
+          "description": "Primeros pasos en el arte de la magia"
+        },
+        "wizard": {
+          "name": "HECHICERO EXPERTO",
+          "description": "Dominio avanzado de los hechizos"
+        },
+        "enchanter": {
+          "name": "ARCHIMAGO SUPREMO",
+          "description": "Maestría total de las artes místicas"
+        }
+      },
+      "controls": "USA ↑↓ PARA ELEGIR\nPULSA ESPACIO O ENTER PARA CONFIRMAR"
+    },
+    "game": {
+      "instructions": "Escribí las palabras que van cayendo\ny luego apretá ENTER",
+      "score": "Puntuación: {score}",
+      "level": "Nivel: {level}",
+      "levels": {
+        "1": {
+          "description": "POSICIÓN BASE - SOLO DEDOS ÍNDICES",
+          "words": ["JU", "FU", "RYU", "VU", "TU", "GY", "MU", "MY", "JUR", "FUR", "RYU", "JUR", "BU", "BY", "HY", "HV"]
+        },
+        "2": {
+          "description": "SOLO DEDOS MEDIOS",
+          "words": ["DEDI", "KIKE", "DICE", "DIKE", "DECE", "KEKE", "KIKI", "IKE", "CEDEC"]
+        },
+        "3": {
+          "description": "SOLO DEDOS ANULARES",
+          "words": ["SOL", "LOS", "SOX", "WOS", "SOS", "XOXO"]
+        },
+        "4": {
+          "description": "SOLO DEDOS MEÑIQUES",
+          "words": ["PAZ", "PAQA", "ZAP", "PAQ", "ÑAZ", "QAPA", "ÑAÑA", "QAP"]
+        },
+        "5": {
+          "description": "COMBINANDO DEDOS ÍNDICES Y MEDIOS",
+          "words": ["JUNTE", "VERDE", "TIENE", "MENTE", "VIENE", "DICE", "JEFE", "MIDE", "RINDE", "CINE"]
+        },
+        "6": {
+          "description": "COMBINANDO DEDOS ÍNDICES, MEDIOS Y ANULARES",
+          "words": ["SENDERO", "VENTILE", "CLIENTE", "SILENCIO", "DESTINO", "VECINOS", "SEMILLA", "DECIRLE", "SERVIR", "MIELES"]
+        },
+        "7": {
+          "description": "USANDO TODOS LOS DEDOS - ¡PALABRAS MÁGICAS!",
+          "words": ["MAGIA", "POCION", "VARITA", "HECHIZO", "MISTICA", "CONJURO", "MAGICO", "PORTAL", "BRUJA", "WIZARD"]
+        }
+      }
+    },
+    "results": {
+      "gameOver": "¡PARTIDA TERMINADA!",
+      "summary": "Nivel alcanzado: {level}\nPuntuación final: {score}",
+      "newHighScore": "¡NUEVO HIGH SCORE!",
+      "leaderboard": "MEJORES PUNTAJES",
+      "returnToMenu": "PRESIONA ESPACIO PARA VOLVER AL MENÚ"
+    }
+  }
+} 

@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "language": "en",
+    "displayName": "English",
+    "direction": "ltr"
+  },
+  "common": {
+    "buttons": {
+      "continue": "CONTINUE",
+      "back": "BACK",
+      "confirm": "CONFIRM",
+      "pressSpace": "PRESS SPACE",
+      "pressEnter": "PRESS ENTER"
+    }
+  },
+  "scenes": {
+    "title": {
+      "pressStart": "PRESS SPACE TO START"
+    },
+    "playerCustomization": {
+      "title": "CUSTOMIZE YOUR CHARACTER!",
+      "enterName": "ENTER YOUR NAME:",
+      "chooseCharacter": "CHOOSE YOUR CHARACTER: (← →)",
+      "continue": "PRESS ENTER TO CONTINUE"
+    },
+    "intro": {
+      "greetings": "HELLO! I'M {nombre}",
+      "desire": "I WANT TO MASTER MAGIC",
+      "challenge": "BUT FIRST I MUST LEARN TO TYPE!",
+      "request": "WILL YOU HELP ME?",
+      "pressSpace": "PRESS SPACE"
+    },
+    "instructions": {
+      "welcome": "WELCOME TO THE ADVENTURE!",
+      "typing": "TYPE THE FALLING WORDS\nAND PRESS ENTER\nTO MAKE THEM DISAPPEAR",
+      "warning": "DON'T LET THE WORDS\nREACH THE GROUND!",
+      "fingers": "EACH FINGER SHOULD PRESS THE KEYS\nOF THE SAME COLOR!",
+      "continue": "PRESS SPACE TO CONTINUE",
+      "start": "PRESS SPACE TO START"
+    },
+    "difficulty": {
+      "title": "CHOOSE YOUR POWER LEVEL",
+      "levels": {
+        "apprentice": {
+          "name": "MAGIC APPRENTICE",
+          "description": "First steps in the art of magic"
+        },
+        "wizard": {
+          "name": "EXPERT WIZARD",
+          "description": "Advanced mastery of spells"
+        },
+        "enchanter": {
+          "name": "SUPREME ARCHMAGE",
+          "description": "Complete mastery of mystic arts"
+        }
+      },
+      "controls": "USE ↑↓ TO CHOOSE\nPRESS SPACE OR ENTER TO CONFIRM"
+    },
+    "game": {
+      "instructions": "Type the falling words\nand then press ENTER",
+      "score": "Score: {score}",
+      "level": "Level: {level}",
+      "levels": {
+        "1": {
+          "description": "HOME POSITION - INDEX FINGERS ONLY",
+          "words": ["JU", "FU", "RYU", "VU", "TU", "GY", "MU", "MY", "JUR", "FUR", "RYU", "JUR", "BU", "BY", "HY", "HV"]
+        },
+        "2": {
+          "description": "MIDDLE FINGERS ONLY",
+          "words": ["DEDI", "KIKE", "DICE", "DIKE", "DECE", "KEKE", "KIKI", "IKE", "CEDEC"]
+        },
+        "3": {
+          "description": "RING FINGERS ONLY",
+          "words": ["SOL", "LOS", "SOX", "WOS", "SOS", "XOXO"]
+        },
+        "4": {
+          "description": "PINKY FINGERS ONLY",
+          "words": ["PAZ", "PAQA", "ZAP", "PAQ", "ÑAZ", "QAPA", "ÑAÑA", "QAP"]
+        },
+        "5": {
+          "description": "COMBINING INDEX AND MIDDLE FINGERS",
+          "words": ["JUNTE", "VERDE", "TIENE", "MENTE", "VIENE", "DICE", "JEFE", "MIDE", "RINDE", "CINE"]
+        },
+        "6": {
+          "description": "COMBINING INDEX, MIDDLE AND RING FINGERS",
+          "words": ["SENDERO", "VENTILE", "CLIENTE", "SILENCIO", "DESTINO", "VECINOS", "SEMILLA", "DECIRLE", "SERVIR", "MIELES"]
+        },
+        "7": {
+          "description": "USING ALL FINGERS - MAGIC WORDS!",
+          "words": ["MAGIC", "POTION", "WAND", "SPELL", "MYSTIC", "CONJURE", "WIZARD", "PORTAL", "WITCH", "ENCHANT"]
+        }
+      }
+    },
+    "results": {
+      "gameOver": "GAME OVER!",
+      "summary": "Level reached: {level}\nFinal score: {score}",
+      "newHighScore": "NEW HIGH SCORE!",
+      "leaderboard": "HIGH SCORES",
+      "returnToMenu": "PRESS SPACE TO RETURN TO MENU"
+    }
+  }
+} 
