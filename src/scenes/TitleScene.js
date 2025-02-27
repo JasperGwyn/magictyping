@@ -116,10 +116,12 @@ export default class TitleScene extends BaseScene {
         this.leftKey = this.input.keyboard.addKey('LEFT');
         this.rightKey = this.input.keyboard.addKey('RIGHT');
         this.enterKey = this.input.keyboard.addKey('ENTER');
+        this.spaceKey = this.input.keyboard.addKey('SPACE');
         
         this.leftKey.on('down', this.selectPreviousOption, this);
         this.rightKey.on('down', this.selectNextOption, this);
         this.enterKey.on('down', this.confirmSelection, this);
+        this.spaceKey.on('down', this.confirmSelection, this);
 
         // Iniciar esta escena en modo transparente
         this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
@@ -266,6 +268,10 @@ export default class TitleScene extends BaseScene {
         if (this.enterKey) {
             this.enterKey.removeAllListeners();
             this.enterKey = null;
+        }
+        if (this.spaceKey) {
+            this.spaceKey.removeAllListeners();
+            this.spaceKey = null;
         }
         
         if (this.music) {

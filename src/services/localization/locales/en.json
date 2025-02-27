@@ -9,7 +9,7 @@
       "continue": "CONTINUE",
       "back": "BACK",
       "confirm": "CONFIRM",
-      "pressSpace": "PRESS SPACE",
+      "pressSpace": "PRESS SPACE TO CONTINUE",
       "pressEnter": "PRESS ENTER"
     }
   },
@@ -31,13 +31,14 @@
       "desire": "I WANT TO MASTER MAGIC",
       "challenge": "BUT FIRST I MUST LEARN TO TYPE!",
       "request": "WILL YOU HELP ME?",
-      "pressSpace": "PRESS SPACE"
+      "pressSpace": "PRESS SPACE TO CONTINUE"
     },
     "instructions": {
       "welcome": "WELCOME TO THE ADVENTURE!",
-      "typing": "TYPE THE FALLING WORDS\nAND PRESS ENTER\nTO MAKE THEM DISAPPEAR",
-      "warning": "DON'T LET THE WORDS\nREACH THE GROUND!",
+      "typing": "TYPE THE FALLING\nLETTERS AND WORDS\nAND PRESS ENTER\nTO MAKE THEM DISAPPEAR",
+      "warning": "DON'T LET THE LETTERS AND WORDS\nREACH THE GROUND!",
       "fingers": "EACH FINGER SHOULD PRESS THE KEYS\nOF THE SAME COLOR!",
+      "indices": "POSITION YOUR INDEX FINGERS\nON F AND J",
       "continue": "PRESS SPACE TO CONTINUE",
       "start": "PRESS SPACE TO START"
     },
@@ -60,33 +61,33 @@
       "controls": "USE ↑↓ TO CHOOSE\nPRESS SPACE OR ENTER TO CONFIRM"
     },
     "game": {
-      "instructions": "Type the falling words\nand then press ENTER",
+      "instructions": "Type the falling letters and words\nand then press ENTER",
       "score": "Score: {score}",
       "level": "Level: {level}",
       "levels": {
         "1": {
           "description": "HOME POSITION - INDEX FINGERS ONLY",
-          "words": ["JU", "FU", "RYU", "VU", "TU", "GY", "MU", "MY", "JUR", "FUR", "RYU", "JUR", "BU", "BY", "HY", "HV"]
+          "words": ["F", "J", "R", "U", "T", "G", "V", "B", "Y", "H", "N", "M"]
         },
         "2": {
           "description": "MIDDLE FINGERS ONLY",
-          "words": ["DEDI", "KIKE", "DICE", "DIKE", "DECE", "KEKE", "KIKI", "IKE", "CEDEC"]
+          "words": ["D", "E", "I", "K", "C"]
         },
         "3": {
           "description": "RING FINGERS ONLY",
-          "words": ["SOL", "LOS", "SOX", "WOS", "SOS", "XOXO"]
+          "words": ["S", "L", "W", "O", "X"]
         },
         "4": {
           "description": "PINKY FINGERS ONLY",
-          "words": ["PAZ", "PAQA", "ZAP", "PAQ", "ÑAZ", "QAPA", "ÑAÑA", "QAP"]
+          "words": ["Q", "A", "Z", "P", "Ñ"]
         },
         "5": {
           "description": "COMBINING INDEX AND MIDDLE FINGERS",
-          "words": ["JUNTE", "VERDE", "TIENE", "MENTE", "VIENE", "DICE", "JEFE", "MIDE", "RINDE", "CINE"]
+          "words": ["F", "J", "D", "K", "E", "I", "R", "U", "T", "Y", "G", "H", "V", "N", "C"]
         },
         "6": {
           "description": "COMBINING INDEX, MIDDLE AND RING FINGERS",
-          "words": ["SENDERO", "VENTILE", "CLIENTE", "SILENCIO", "DESTINO", "VECINOS", "SEMILLA", "DECIRLE", "SERVIR", "MIELES"]
+          "words": ["F", "J", "D", "K", "E", "I", "R", "U", "T", "Y", "G", "H", "V", "N", "C", "S", "L", "W", "O", "X"]
         },
         "7": {
           "description": "USING ALL FINGERS - MAGIC WORDS!",

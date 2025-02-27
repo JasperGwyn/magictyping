@@ -1,5 +1,5 @@
 import BaseScene from './BaseScene';
-import { COLORS, PALABRAS_POR_NIVEL, GAME_CONFIG, SCREEN_CONFIG } from '../config/gameConfig';
+import { COLORS, GAME_CONFIG, SCREEN_CONFIG } from '../config/gameConfig';
 import i18n from '../services/localization';
 
 export default class GameScene extends BaseScene {
@@ -366,8 +366,37 @@ export default class GameScene extends BaseScene {
         // No spawnear si no está permitido
         if (!this.canSpawnWords) return;
         
-        const availableWords = PALABRAS_POR_NIVEL[this.level].palabras;
+        // Obtener las palabras del nivel actual
+        // FIX: Acceder correctamente al array de palabras desde las traducciones
+        let availableWords;
+        try {
+            // Acceder directamente al objeto de traducciones para obtener el array de palabras
+            availableWords = i18n.translations[i18n.currentLanguage]?.scenes?.game?.levels?.[this.level]?.words;
+            
+            // Si no se encuentran palabras, intentar con el fallback en inglés
+            if (!Array.isArray(availableWords) && i18n.translations['en']) {
+                console.warn(`[LETRAS] No se encontraron palabras para nivel ${this.level} en ${i18n.currentLanguage}, intentando con inglés`);
+                availableWords = i18n.translations['en']?.scenes?.game?.levels?.[this.level]?.words;
+            }
+            
+            // Verificar que sea un array
+            if (!Array.isArray(availableWords)) {
+                console.error(`[LETRAS] ERROR: No se encontraron palabras válidas para el nivel ${this.level}`);
+                // Proporcionar un array de respaldo para evitar que el juego se rompa
+                availableWords = ["F", "J", "R", "U", "T", "G", "V", "B", "Y", "H", "N", "M"];
+            }
+        } catch (error) {
+            console.error(`[LETRAS] Error obteniendo palabras para nivel ${this.level}:`, error);
+            // Proporcionar un array de respaldo
+            availableWords = ["F", "J", "R", "U", "T", "G", "V", "B", "Y", "H", "N", "M"];
+        }
+        
+        // Agregar logs específicos para la selección de letras
+        console.log(`[LETRAS] Nivel ${this.level} - Lista de palabras disponibles:`, availableWords);
+        
         const word = Phaser.Math.RND.pick(availableWords);
+        console.log(`[LETRAS] Letra/palabra seleccionada: "${word}"`);
+        
         const x = Phaser.Math.Between(100, SCREEN_CONFIG.WIDTH - 100);
         
         // Crear un contenedor para la palabra
@@ -418,10 +447,11 @@ export default class GameScene extends BaseScene {
         const velocidadNivel = this.speedMultiplier;
         const velocidadDificultad = this.difficultyMultiplier;
         
-        console.log('=== Debug Spawn Palabra ===');
-        console.log('VELOCIDAD_BASE:', velocidadBase, typeof velocidadBase);
-        console.log('speedMultiplier:', velocidadNivel, typeof velocidadNivel);
-        console.log('difficultyMultiplier:', velocidadDificultad, typeof velocidadDificultad);
+        // Reemplazar los logs de debug de velocidad por uno más conciso
+        // console.log('=== Debug Spawn Palabra ===');
+        // console.log('VELOCIDAD_BASE:', velocidadBase, typeof velocidadBase);
+        // console.log('speedMultiplier:', velocidadNivel, typeof velocidadNivel);
+        // console.log('difficultyMultiplier:', velocidadDificultad, typeof velocidadDificultad);
         
         const velocidadFinal = velocidadBase * velocidadNivel * velocidadDificultad;
 
@@ -431,7 +461,7 @@ export default class GameScene extends BaseScene {
             speed: velocidadFinal
         });
 
-        console.log('Velocidad final:', velocidadFinal);
+        // console.log('Velocidad final:', velocidadFinal);
     }
 
     getSpawnTime() {
@@ -457,10 +487,29 @@ export default class GameScene extends BaseScene {
             align: 'center'
         }).setOrigin(0.5);
 
+        // Obtener la descripción del nivel actual
+        let levelDescription = "";
+        try {
+            // FIX: Acceder directamente a la descripción del nivel
+            levelDescription = i18n.translations[i18n.currentLanguage]?.scenes?.game?.levels?.[this.level]?.description;
+            
+            // Si no se encuentra, intentar con el fallback en inglés
+            if (!levelDescription && i18n.translations['en']) {
+                levelDescription = i18n.translations['en']?.scenes?.game?.levels?.[this.level]?.description;
+            }
+            
+            // Si aún no hay descripción, usar un texto genérico
+            if (!levelDescription) {
+                levelDescription = `LEVEL ${this.level}`;
+            }
+        } catch (error) {
+            console.error(`[LETRAS] Error obteniendo descripción para nivel ${this.level}:`, error);
+            levelDescription = `LEVEL ${this.level}`;
+        }
+
         // Texto de la descripción
-        // Aquí usamos el formato levels.N.description que ya está estructurado en los archivos de traducción
         const descText = this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 60, 
-            i18n.getText(`scenes.game.levels.${this.level}.description`), {
+            levelDescription, {
             fontFamily: '"Press Start 2P"',
             fontSize: '16px',
             fill: '#fff',
@@ -503,19 +552,37 @@ export default class GameScene extends BaseScene {
             this.speedMultiplier *= GAME_CONFIG.INCREMENTO_VELOCIDAD;
             this.frequencyMultiplier *= GAME_CONFIG.INCREMENTO_FRECUENCIA;
             
-            // Si hay siguiente nivel, mostrar la introducción del nuevo nivel
-            if (PALABRAS_POR_NIVEL[this.level]) {
-                // Limpiar palabras existentes
-                this.words.forEach(word => word.container.destroy());
-                this.words = [];
-                this.wordsCompleted = 0;
+            // Verificar si hay un siguiente nivel en los archivos de localización
+            try {
+                // FIX: Acceder correctamente a las palabras del siguiente nivel
+                const nextLevelWords = i18n.translations[i18n.currentLanguage]?.scenes?.game?.levels?.[this.level]?.words;
                 
-                // Mostrar la introducción del nuevo nivel
-                this.showLevelIntro();
-            } else {
-                // Si no hay más niveles, ir a la pantalla de resultados
+                // Verificar si existen palabras para el siguiente nivel
+                if (Array.isArray(nextLevelWords) && nextLevelWords.length > 0) {
+                    // Limpiar palabras existentes
+                    this.words.forEach(word => word.container.destroy());
+                    this.words = [];
+                    this.wordsCompleted = 0;
+                    
+                    // Mostrar la introducción del nuevo nivel
+                    this.showLevelIntro();
+                } else {
+                    console.log(`[LETRAS] No hay más niveles después del ${this.level-1}, finalizando juego`);
+                    // Si no hay más niveles, ir a la pantalla de resultados
+                    this.registry.set('score', this.score);
+                    this.registry.set('level', this.level - 1); // Ajustar al último nivel válido
+                    
+                    // Detener la música actual
+                    if (this.music) this.music.stop();
+                    
+                    // Transición a la escena de resultados
+                    this.scene.start('results');
+                }
+            } catch(e) {
+                console.error("[LETRAS] Error al cargar el siguiente nivel:", e);
+                // Si hay error (nivel no existe), ir a resultados
                 this.registry.set('score', this.score);
-                this.registry.set('level', this.level);
+                this.registry.set('level', this.level - 1); // Volver al nivel completado
                 
                 // Detener la música actual
                 if (this.music) this.music.stop();

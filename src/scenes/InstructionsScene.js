@@ -15,6 +15,7 @@ export default class InstructionsScene extends BaseScene {
         super.preload();
         this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.image('dedos_teclado', 'assets/images/ui/dedosteclado.png');
+        this.load.image('dedos_indices', 'assets/images/ui/dedosindices.png');
     }
 
     create() {
@@ -71,6 +72,12 @@ export default class InstructionsScene extends BaseScene {
             if (this.currentScreen === 'instructions') {
                 // Limpiar pantalla actual
                 this.clearCurrentScreen();
+                // Mostrar pantalla de índices
+                this.currentScreen = 'indices';
+                this.showIndicesScreen();
+            } else if (this.currentScreen === 'indices') {
+                // Limpiar pantalla actual
+                this.clearCurrentScreen();
                 // Mostrar pantalla de teclado
                 this.currentScreen = 'keyboard';
                 this.showKeyboardScreen();
@@ -83,6 +90,10 @@ export default class InstructionsScene extends BaseScene {
 
         this.input.keyboard.on('keydown-ENTER', () => {
             if (this.currentScreen === 'instructions') {
+                this.clearCurrentScreen();
+                this.currentScreen = 'indices';
+                this.showIndicesScreen();
+            } else if (this.currentScreen === 'indices') {
                 this.clearCurrentScreen();
                 this.currentScreen = 'keyboard';
                 this.showKeyboardScreen();
@@ -256,6 +267,124 @@ export default class InstructionsScene extends BaseScene {
                     fontSize: '12px',  // Reducido para ajustarse a las teclas más pequeñas
                     fill: '#fff'
                 }).setOrigin(0.5);
+            });
+        });
+    }
+
+    showIndicesScreen() {
+        // Crear el teclado visual dentro del panel con solo F y J destacadas
+        this.createIndicesKeyboard();
+
+        // Agregar imagen de referencia de dedos índices
+        const dedosIndices = this.add.image(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT / 2 + 10,
+            'dedos_indices'
+        );
+        dedosIndices.setScale(1.8);
+        dedosIndices.setAlpha(0.9);
+        this.instructionTexts.push(dedosIndices);
+
+        // Agregar texto explicativo
+        const explanationText = this.add.text(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT / 2 + 130,
+            i18n.getText('scenes.instructions.indices'),
+            {
+                fontFamily: '"Press Start 2P"',
+                fontSize: '16px',
+                color: '#ffffff',
+                align: 'center',
+                lineSpacing: 20
+            }
+        ).setOrigin(0.5);
+        this.instructionTexts.push(explanationText);
+
+        // Texto de "Presiona ESPACIO"
+        const pressSpaceText = this.add.text(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT - 50,
+            i18n.getText('scenes.instructions.continue'),
+            {
+                fontFamily: '"Press Start 2P"',
+                fontSize: '20px',
+                color: '#ffffff',
+                align: 'center'
+            }
+        ).setOrigin(0.5);
+        this.instructionTexts.push(pressSpaceText);
+
+        // Animación de parpadeo
+        this.tweens.add({
+            targets: pressSpaceText,
+            alpha: 0,
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
+    }
+
+    createIndicesKeyboard() {
+        const keySize = 30;
+        const padding = 4;
+        const startY = SCREEN_CONFIG.HEIGHT / 2 - 170;
+        
+        // Definir las filas del teclado
+        const rows = [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+        ];
+
+        // Color gris para todas las teclas
+        const grayColor = 0x777777;
+        // Colores específicos para F y J
+        const fColor = 0xff00ff; // rosa para F
+        const jColor = 0x00ffff; // cyan para J
+
+        // Calcular el ancho total del teclado
+        const maxRowLength = Math.max(...rows.map(row => row.length));
+        const totalWidth = maxRowLength * (keySize + padding) - padding;
+        const startX = (SCREEN_CONFIG.WIDTH - totalWidth) / 2;
+
+        // Crear el teclado
+        rows.forEach((row, rowIndex) => {
+            const rowWidth = row.length * (keySize + padding) - padding;
+            let rowX;
+
+            if (rowIndex === 1) {
+                rowX = startX + (keySize + padding) * 0.25;
+            } else if (rowIndex === 2) {
+                rowX = startX + (keySize + padding) * 0.75;
+            } else {
+                rowX = startX;
+            }
+
+            row.forEach((key, keyIndex) => {
+                const x = rowX + keyIndex * (keySize + padding);
+                const y = startY + rowIndex * (keySize + padding);
+
+                // Determinar el color de la tecla (solo F y J destacadas)
+                let keyColor = grayColor;
+                if (key === 'F') {
+                    keyColor = fColor;
+                } else if (key === 'J') {
+                    keyColor = jColor;
+                }
+
+                // Crear fondo de la tecla
+                const keyBackground = this.add.rectangle(x, y, keySize, keySize, keyColor)
+                    .setOrigin(0, 0)
+                    .setAlpha(0.8);
+                this.instructionTexts.push(keyBackground);
+
+                // Crear texto de la tecla
+                const keyText = this.add.text(x + keySize/2, y + keySize/2, key, {
+                    fontFamily: '"Press Start 2P"',
+                    fontSize: '12px',
+                    fill: '#fff'
+                }).setOrigin(0.5);
+                this.instructionTexts.push(keyText);
             });
         });
     }

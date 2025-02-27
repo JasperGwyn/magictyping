@@ -44,6 +44,26 @@ const fallbackTranslations = {
                 challenge: "BUT FIRST I MUST LEARN TO TYPE!",
                 request: "WILL YOU HELP ME?",
                 pressSpace: "PRESS SPACE"
+            },
+            // Agregar datos de nivel para el fallback
+            game: {
+                instructions: "Type the falling letters and words\nand then press ENTER",
+                score: "Score: {score}",
+                level: "Level: {level}",
+                levels: {
+                    "1": {
+                        "description": "HOME POSITION - INDEX FINGERS ONLY",
+                        "words": ["F", "J", "R", "U", "T", "G", "V", "B", "Y", "H", "N", "M"]
+                    },
+                    "2": {
+                        "description": "MIDDLE FINGERS ONLY",
+                        "words": ["D", "E", "I", "K", "C"]
+                    },
+                    "3": {
+                        "description": "RING FINGERS ONLY",
+                        "words": ["S", "L", "W", "O", "X"]
+                    }
+                }
             }
         }
     },
@@ -79,6 +99,26 @@ const fallbackTranslations = {
                 challenge: "¡PERO PRIMERO DEBO APRENDER A TIPEAR!",
                 request: "¿ME AYUDAS?",
                 pressSpace: "PRESIONA ESPACIO"
+            },
+            // Agregar datos de nivel para el fallback
+            game: {
+                instructions: "Escribí las letras y palabras que van cayendo\ny luego apretá ENTER",
+                score: "Puntuación: {score}",
+                level: "Nivel: {level}",
+                levels: {
+                    "1": {
+                        "description": "POSICIÓN BASE - SOLO DEDOS ÍNDICES",
+                        "words": ["F", "J", "R", "U", "T", "G", "V", "B", "Y", "H", "N", "M"]
+                    },
+                    "2": {
+                        "description": "SOLO DEDOS MEDIOS",
+                        "words": ["D", "E", "I", "K", "C"]
+                    },
+                    "3": {
+                        "description": "SOLO DEDOS ANULARES",
+                        "words": ["S", "L", "W", "O", "X"]
+                    }
+                }
             }
         }
     }
@@ -154,6 +194,32 @@ i18n.initialize().then(() => {
         traduccionesCargadas: i18n.isLoaded
     });
     
+    // Verificar los niveles de juego y las palabras para nivel 1
+    try {
+        const i18nData = i18n.translations[i18n.currentLanguage];
+        if (i18nData?.scenes?.game?.levels) {
+            console.log(`[LETRAS:INIT] Niveles de juego disponibles:`, Object.keys(i18nData.scenes.game.levels));
+            
+            // Verificar específicamente nivel 1
+            if (i18nData.scenes.game.levels['1']?.words) {
+                const level1Words = i18nData.scenes.game.levels['1'].words;
+                console.log(`[LETRAS:INIT] Palabras nivel 1:`, level1Words);
+                
+                // Verificar si hay números en el array de palabras
+                const numericChars = level1Words.filter(word => /\d/.test(word));
+                if (numericChars.length > 0) {
+                    console.warn(`[LETRAS:INIT] ¡ALERTA! Hay caracteres numéricos en nivel 1:`, numericChars);
+                }
+            } else {
+                console.warn(`[LETRAS:INIT] No se encontraron palabras para el nivel 1`);
+            }
+        } else {
+            console.warn(`[LETRAS:INIT] No se encontraron niveles de juego en las traducciones`);
+        }
+    } catch (error) {
+        console.error(`[LETRAS:INIT] Error verificando niveles:`, error);
+    }
+    
     // Iniciar juego después de cargar idioma
     initializeGame();
 }).catch(error => {
@@ -162,6 +228,9 @@ i18n.initialize().then(() => {
     
     // Usar fallback translations
     i18n.initializeWithTranslations(fallbackTranslations, 'en');
+    
+    // Verificar si hay niveles de juego en las traducciones de respaldo
+    console.warn(`[LETRAS:INIT] Usando traducciones de respaldo - verificar si incluyen niveles de juego`);
     
     // Iniciar juego con traducciones de respaldo
     initializeGame();

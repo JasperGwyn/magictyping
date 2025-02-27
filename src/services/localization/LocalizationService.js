@@ -123,6 +123,17 @@ class LocalizationService {
             const data = await response.json();
             console.log(`[i18n] Datos JSON recibidos para ${lang}:`, Object.keys(data));
             
+            // Agregar log para verificar si contiene niveles de juego
+            if (data.scenes && data.scenes.game && data.scenes.game.levels) {
+                console.log(`[i18n:LETRAS] Niveles de juego cargados:`, Object.keys(data.scenes.game.levels));
+                // Verificar específicamente nivel 1
+                if (data.scenes.game.levels['1'] && data.scenes.game.levels['1'].words) {
+                    console.log(`[i18n:LETRAS] Palabras nivel 1:`, data.scenes.game.levels['1'].words);
+                }
+            } else {
+                console.warn(`[i18n:LETRAS] El archivo de idioma no contiene niveles de juego`);
+            }
+            
             this.translations[lang] = data;
             this.currentLanguage = lang;
             this.isLoaded = true;
@@ -192,10 +203,10 @@ class LocalizationService {
         const keys = key.split('.');
         let result = this.translations[this.currentLanguage];
         
-        // Para depuración, imprimir la primera parte de la estructura
-        console.log(`[i18n] Buscando clave '${key}' en idioma ${this.currentLanguage}`);
-        console.log(`[i18n] Estructura de traducciones disponible:`, 
-            Object.keys(this.translations[this.currentLanguage]));
+        // Comentamos los logs de depuración
+        // console.log(`[i18n] Buscando clave '${key}' en idioma ${this.currentLanguage}`);
+        // console.log(`[i18n] Estructura de traducciones disponible:`, 
+        //    Object.keys(this.translations[this.currentLanguage]));
         
         // Navegar por la estructura de claves
         for (const k of keys) {
@@ -203,7 +214,7 @@ class LocalizationService {
                 console.warn(`[i18n] Parte de la clave '${k}' no encontrada en '${key}'`);
                 // Intentar fallback al inglés si la clave no existe y no estamos en inglés
                 if (this.currentLanguage !== 'en' && this.translations['en']) {
-                    console.log(`[i18n] Intentando fallback a inglés para la clave: ${key}`);
+                    // console.log(`[i18n] Intentando fallback a inglés para la clave: ${key}`);
                     return this._getTextWithFallback(key, params);
                 }
                 console.warn(`[i18n] Clave de traducción no encontrada: ${key}`);
@@ -220,7 +231,7 @@ class LocalizationService {
         
         // Reemplazar parámetros
         const final = this._interpolateParams(result, params);
-        console.log(`[i18n] Texto obtenido para '${key}':`, final);
+        // console.log(`[i18n] Texto obtenido para '${key}':`, final);
         return final;
     }
 

@@ -35,9 +35,10 @@
     },
     "instructions": {
       "welcome": "¡BIENVENIDO A LA AVENTURA!",
-      "typing": "ESCRIBE LAS PALABRAS QUE CAEN\nY PRESIONA ENTER\nPARA QUE DESAPAREZCAN",
-      "warning": "¡NO DEJES QUE LAS PALABRAS\nLLEGUEN AL PISO!",
+      "typing": "ESCRIBE LAS LETRAS Y PALABRAS QUE CAEN\nY PRESIONA ENTER\nPARA QUE DESAPAREZCAN",
+      "warning": "¡NO DEJES QUE LAS LETRAS Y PALABRAS\nLLEGUEN AL PISO!",
       "fingers": "¡CADA DEDO DEBE PRESIONAR LAS TECLAS\nDE SU MISMO COLOR!",
+      "indices": "POSICIONA TUS DEDOS ÍNDICES\nEN LA F Y LA J",
       "continue": "PRESIONA ESPACIO PARA CONTINUAR",
       "start": "PRESIONA ESPACIO PARA COMENZAR"
     },
@@ -60,33 +61,33 @@
       "controls": "USA ↑↓ PARA ELEGIR\nPULSA ESPACIO O ENTER PARA CONFIRMAR"
     },
     "game": {
-      "instructions": "Escribí las palabras que van cayendo\ny luego apretá ENTER",
+      "instructions": "Escribí las letras y palabras que van cayendo\ny luego apretá ENTER",
       "score": "Puntuación: {score}",
       "level": "Nivel: {level}",
       "levels": {
         "1": {
           "description": "POSICIÓN BASE - SOLO DEDOS ÍNDICES",
-          "words": ["JU", "FU", "RYU", "VU", "TU", "GY", "MU", "MY", "JUR", "FUR", "RYU", "JUR", "BU", "BY", "HY", "HV"]
+          "words": ["F", "J", "R", "U", "T", "G", "V", "B", "Y", "H", "N", "M"]
         },
         "2": {
           "description": "SOLO DEDOS MEDIOS",
-          "words": ["DEDI", "KIKE", "DICE", "DIKE", "DECE", "KEKE", "KIKI", "IKE", "CEDEC"]
+          "words": ["D", "E", "I", "K", "C"]
         },
         "3": {
           "description": "SOLO DEDOS ANULARES",
-          "words": ["SOL", "LOS", "SOX", "WOS", "SOS", "XOXO"]
+          "words": ["S", "L", "W", "O", "X"]
         },
         "4": {
           "description": "SOLO DEDOS MEÑIQUES",
-          "words": ["PAZ", "PAQA", "ZAP", "PAQ", "ÑAZ", "QAPA", "ÑAÑA", "QAP"]
+          "words": ["Q", "A", "Z", "P", "Ñ"]
         },
         "5": {
           "description": "COMBINANDO DEDOS ÍNDICES Y MEDIOS",
-          "words": ["JUNTE", "VERDE", "TIENE", "MENTE", "VIENE", "DICE", "JEFE", "MIDE", "RINDE", "CINE"]
+          "words": ["F", "J", "D", "K", "E", "I", "R", "U", "T", "Y", "G", "H", "V", "N", "C"]
         },
         "6": {
           "description": "COMBINANDO DEDOS ÍNDICES, MEDIOS Y ANULARES",
-          "words": ["SENDERO", "VENTILE", "CLIENTE", "SILENCIO", "DESTINO", "VECINOS", "SEMILLA", "DECIRLE", "SERVIR", "MIELES"]
+          "words": ["F", "J", "D", "K", "E", "I", "R", "U", "T", "Y", "G", "H", "V", "N", "C", "S", "L", "W", "O", "X"]
         },
         "7": {
           "description": "USANDO TODOS LOS DEDOS - ¡PALABRAS MÁGICAS!",
