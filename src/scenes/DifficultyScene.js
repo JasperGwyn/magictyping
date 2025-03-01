@@ -25,6 +25,9 @@ export default class DifficultyScene extends BaseScene {
             0.5
         );
 
+        // Calcular el ancho máximo para el texto (panel width con márgenes)
+        const textMaxWidth = panelWidth - 60; // 30px de margen a cada lado
+
         // Título
         this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
@@ -34,7 +37,8 @@ export default class DifficultyScene extends BaseScene {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
                 color: '#ffffff',
-                align: 'center'
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
 
@@ -59,7 +63,8 @@ export default class DifficultyScene extends BaseScene {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 color: '#ffffff',
-                align: 'center'
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }).setOrigin(0.5);
 
             // Descripción de la dificultad
@@ -68,7 +73,8 @@ export default class DifficultyScene extends BaseScene {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '12px',
                 color: '#cccccc',
-                align: 'center'
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }).setOrigin(0.5);
 
             container.add([title, desc]);
@@ -85,7 +91,8 @@ export default class DifficultyScene extends BaseScene {
                 fontSize: '20px',
                 color: '#ffffff',
                 align: 'center',
-                lineSpacing: 10
+                lineSpacing: 10,
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
 
@@ -139,7 +146,7 @@ export default class DifficultyScene extends BaseScene {
         this.registry.set('difficulty', difficulty);
         this.registry.set('speedMultiplier', DIFICULTADES[difficulty].multiplicador);
         
-        // Transición a la escena de instrucciones
-        this.transitionToScene('instructions');
+        // Transición a la escena de introducción
+        this.transitionToScene('intro');
     }
 } 

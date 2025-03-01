@@ -71,7 +71,8 @@ export default class IntroScene extends BaseScene {
             fontFamily: '"Press Start 2P"',
             fontSize: '20px',
             color: '#ffffff',
-            align: 'center'
+            align: 'center',
+            wordWrap: { width: SCREEN_CONFIG.WIDTH - 100 }
         }).setOrigin(0.5).setAlpha(0);
 
         // Animación de entrada del personaje

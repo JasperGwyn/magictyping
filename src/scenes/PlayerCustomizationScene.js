@@ -26,6 +26,10 @@ export default class PlayerCustomizationScene extends BaseScene {
     create() {
         super.create();
 
+        // Reset player name and selected character each time the scene is created
+        this.playerName = '';
+        this.selectedCharacter = 'wizard';
+
         // Asegurarnos que LoadingScene esté activa
         if (!this.scene.isActive('loading')) {
             console.log('PlayerCustomizationScene: LoadingScene no está activa, iniciándola...');
@@ -46,12 +50,18 @@ export default class PlayerCustomizationScene extends BaseScene {
             0.7
         );
 
+        // Calcular el ancho máximo para el texto (panel width con márgenes)
+        const panelWidth = SCREEN_CONFIG.WIDTH * 0.8;
+        const textMaxWidth = panelWidth - 60; // 30px de margen a cada lado
+
         // Título
         this.displayObjects.push(
             this.add.text(SCREEN_CONFIG.WIDTH / 2, 120, i18n.getText('scenes.playerCustomization.title'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '24px',
-                fill: '#ffffff'
+                fill: '#ffffff',
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }).setOrigin(0.5)
         );
 
@@ -60,7 +70,9 @@ export default class PlayerCustomizationScene extends BaseScene {
             this.add.text(SCREEN_CONFIG.WIDTH / 2, 180, i18n.getText('scenes.playerCustomization.enterName'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
-                fill: '#ffff00'
+                fill: '#ffff00',
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }).setOrigin(0.5)
         );
 
@@ -99,7 +111,9 @@ export default class PlayerCustomizationScene extends BaseScene {
             this.add.text(SCREEN_CONFIG.WIDTH / 2, 300, i18n.getText('scenes.playerCustomization.chooseCharacter'), {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
-                fill: '#ffff00'
+                fill: '#ffff00',
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }).setOrigin(0.5)
         );
 
@@ -131,7 +145,9 @@ export default class PlayerCustomizationScene extends BaseScene {
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
-                fill: '#ffffff'
+                fill: '#ffffff',
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
         this.displayObjects.push(continueText);
@@ -150,6 +166,9 @@ export default class PlayerCustomizationScene extends BaseScene {
 
         // Input handling
         this.input.keyboard.on('keydown', this.handleKeyInput, this);
+        
+        // Initialize the name text field to empty
+        this.updateNameText();
     }
 
     handleKeyInput(event) {
@@ -158,8 +177,8 @@ export default class PlayerCustomizationScene extends BaseScene {
             this.registry.set('playerName', this.playerName);
             this.registry.set('characterType', this.selectedCharacter);
             
-            // Transición a la escena de introducción
-            this.transitionToScene('intro');
+            // Transición a la escena de dificultad
+            this.transitionToScene('difficulty');
         } else if (event.key === 'Backspace') {
             this.playerName = this.playerName.slice(0, -1);
             this.updateNameText();

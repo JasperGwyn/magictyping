@@ -64,8 +64,12 @@ export default class InstructionsScene extends BaseScene {
             0.7
         );
 
+        // Calcular el ancho máximo para el texto (panel width con márgenes)
+        const panelWidth = SCREEN_CONFIG.WIDTH * 0.8;
+        const textMaxWidth = panelWidth - 60; // 30px de margen a cada lado
+
         // Mostrar la primera pantalla de instrucciones
-        this.showInstructionsScreen();
+        this.showInstructionsScreen(textMaxWidth);
 
         // Configurar evento de teclado
         this.input.keyboard.on('keydown-SPACE', () => {
@@ -104,15 +108,16 @@ export default class InstructionsScene extends BaseScene {
         });
     }
 
-    showInstructionsScreen() {
+    showInstructionsScreen(textMaxWidth) {
         // Configuración de espaciado
         const fontSize = 20;
         const lineSpacing = 35;
-        const fixedParagraphHeight = 130;
+        const titleParagraphHeight = 100; // Altura específica para el título (más pequeña)
+        const fixedParagraphHeight = 150; // Altura para el resto de párrafos
 
-        // Calcular altura total y posición inicial
-        const totalHeight = fixedParagraphHeight * this.instructions.length;
-        let startY = this.panel.y - (totalHeight / 2) + (fixedParagraphHeight / 2);
+        // Calcular altura total y posición inicial (ajustando por la altura especial del título)
+        const totalHeight = titleParagraphHeight + (fixedParagraphHeight * (this.instructions.length - 1));
+        let startY = this.panel.y - (totalHeight / 2) + (titleParagraphHeight / 2);
 
         // Agregar instrucciones
         this.instructions.forEach((instruction, index) => {
@@ -121,11 +126,18 @@ export default class InstructionsScene extends BaseScene {
                 fontSize: `${fontSize}px`,
                 color: index === 0 ? '#ffff00' : '#ffffff', // Primer texto en amarillo, resto en blanco
                 align: 'center',
-                lineSpacing: lineSpacing / 2
+                lineSpacing: lineSpacing/2, 
+                wordWrap: { width: textMaxWidth }
             }).setOrigin(0.5);
             
             this.instructionTexts.push(text);
-            startY += fixedParagraphHeight;
+            
+            // Usar altura diferente para el título
+            if (index === 0) {
+                startY += titleParagraphHeight;
+            } else {
+                startY += fixedParagraphHeight;
+            }
         });
 
         // Texto de "Presiona ESPACIO"
@@ -137,11 +149,12 @@ export default class InstructionsScene extends BaseScene {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 color: '#ffffff',
-                align: 'center'
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
         this.instructionTexts.push(pressSpaceText);
-
+        
         // Animación de parpadeo
         this.tweens.add({
             targets: pressSpaceText,
@@ -159,6 +172,10 @@ export default class InstructionsScene extends BaseScene {
     }
 
     showKeyboardScreen() {
+        // Calcular el ancho máximo para el texto (panel width con márgenes)
+        const panelWidth = SCREEN_CONFIG.WIDTH * 0.8;
+        const textMaxWidth = panelWidth - 60; // 30px de margen a cada lado
+        
         // Crear el teclado visual dentro del panel
         this.createKeyboard();
 
@@ -181,7 +198,8 @@ export default class InstructionsScene extends BaseScene {
                 fontSize: '16px',  // Reducido para mejor ajuste
                 color: '#ffffff',
                 align: 'center',
-                lineSpacing: 20
+                lineSpacing: 20,
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
 
@@ -194,10 +212,11 @@ export default class InstructionsScene extends BaseScene {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 color: '#ffffff',
-                align: 'center'
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
-
+        
         // Animación de parpadeo
         this.tweens.add({
             targets: pressSpaceText,
@@ -272,34 +291,38 @@ export default class InstructionsScene extends BaseScene {
     }
 
     showIndicesScreen() {
-        // Crear el teclado visual dentro del panel con solo F y J destacadas
-        this.createIndicesKeyboard();
-
-        // Agregar imagen de referencia de dedos índices
+        // Calcular el ancho máximo para el texto (panel width con márgenes)
+        const panelWidth = SCREEN_CONFIG.WIDTH * 0.8;
+        const textMaxWidth = panelWidth - 60; // 30px de margen a cada lado
+        
+        // Agregar imagen de dedos
         const dedosIndices = this.add.image(
             SCREEN_CONFIG.WIDTH / 2,
-            SCREEN_CONFIG.HEIGHT / 2 + 10,
+            SCREEN_CONFIG.HEIGHT / 2 - 50,
             'dedos_indices'
         );
-        dedosIndices.setScale(1.8);
-        dedosIndices.setAlpha(0.9);
+        dedosIndices.setScale(0.7);
         this.instructionTexts.push(dedosIndices);
-
-        // Agregar texto explicativo
+        
+        // Texto explicativo
         const explanationText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
-            SCREEN_CONFIG.HEIGHT / 2 + 130,
+            SCREEN_CONFIG.HEIGHT / 2 + 100,
             i18n.getText('scenes.instructions.indices'),
             {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '16px',
                 color: '#ffffff',
                 align: 'center',
-                lineSpacing: 20
+                lineSpacing: 20,
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
         this.instructionTexts.push(explanationText);
-
+        
+        // Crear teclado con F y J resaltadas
+        this.createIndicesKeyboard();
+        
         // Texto de "Presiona ESPACIO"
         const pressSpaceText = this.add.text(
             SCREEN_CONFIG.WIDTH / 2,
@@ -309,11 +332,12 @@ export default class InstructionsScene extends BaseScene {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 color: '#ffffff',
-                align: 'center'
+                align: 'center',
+                wordWrap: { width: textMaxWidth }
             }
         ).setOrigin(0.5);
         this.instructionTexts.push(pressSpaceText);
-
+        
         // Animación de parpadeo
         this.tweens.add({
             targets: pressSpaceText,
