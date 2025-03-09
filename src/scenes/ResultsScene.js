@@ -21,7 +21,10 @@ export default class ResultsScene extends BaseScene {
         super.preload();
         this.load.image('star', 'assets/images/ui/star.png');
         this.load.image('wizard', 'assets/images/characters/she.png');
-        this.load.audio('results_music', 'assets/sounds/music/endmusic.mp3', {
+        this.load.audio('results_music', [
+            'assets/sounds/music/endmusic.opus',
+            'assets/sounds/music/endmusic.mp3'
+        ], {
             instances: 1
         });
     }
@@ -49,7 +52,7 @@ export default class ResultsScene extends BaseScene {
 
         // Iniciar música
         if (this.music) this.music.stop();
-        this.music = this.sound.add('results_music', { volume: 0.5, loop: true });
+        this.music = this.sound.add('results_music', { volume: 0.3, loop: true });
         this.music.play();
 
         // Obtener puntuación, nivel y nombre del jugador

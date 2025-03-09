@@ -15,7 +15,10 @@ export default class IntroScene extends BaseScene {
         super.preload();
         this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.image('oldwizard', 'assets/images/characters/he.png');
-        this.load.audio('intro_music', 'assets/sounds/music/intro.mp3');
+        this.load.audio('intro_music', [
+            'assets/sounds/music/intro.opus',
+            'assets/sounds/music/intro.mp3'
+        ]);
     }
 
     create() {

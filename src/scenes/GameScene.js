@@ -52,7 +52,10 @@ export default class GameScene extends BaseScene {
         this.load.audio('success', 'assets/sounds/effects/powerUp2.ogg');
         this.load.audio('error', 'assets/sounds/effects/lowThreeTone.ogg');
         this.load.audio('explosion', 'assets/sounds/effects/sfx_explosionGoo.ogg');
-        this.load.audio('game_music', `assets/sounds/music/game_theme_nivel${this.level}.ogg`);
+        this.load.audio('game_music', [
+            `assets/sounds/music/game_theme_nivel${this.level}.opus`,
+            `assets/sounds/music/game_theme_nivel${this.level}.mp3`
+        ]);
         this.load.image('dedos_teclado', 'assets/images/ui/dedosteclado.png');
     }
 

@@ -16,7 +16,10 @@ export default class TitleScene extends BaseScene {
     preload() {
         super.preload();
         // Cargar la música del intro que sabemos que existe
-        this.load.audio('intro_music', 'assets/sounds/music/intro.mp3');
+        this.load.audio('intro_music', [
+            'assets/sounds/music/intro.opus',
+            'assets/sounds/music/intro.mp3'
+        ]);
         this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.image('oldwizard', 'assets/images/characters/he.png');
     }
