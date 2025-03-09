@@ -4,7 +4,7 @@ export default class BaseScene extends Phaser.Scene {
     constructor(key) {
         super(key);
         this.isUpdateBackgroundBound = false;
-        this.introMusicScenes = ['intro', 'title', 'instructions'];
+        this.introMusicScenes = ['intro', 'title', 'instructions', 'player-customization', 'difficulty'];
     }
 
     preload() {

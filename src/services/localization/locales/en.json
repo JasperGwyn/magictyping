@@ -58,7 +58,7 @@
           "description": "Complete mastery of mystic arts"
         }
       },
-      "controls": "USE ↑↓ TO CHOOSE\nPRESS SPACE OR ENTER TO CONFIRM"
+      "controls": "USE ↑↓ TO CHOOSE\nPRESS ENTER TO CONFIRM"
     },
     "game": {
       "instructions": "Type the falling letters and words\nand then press ENTER",

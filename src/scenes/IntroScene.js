@@ -33,12 +33,23 @@ export default class IntroScene extends BaseScene {
             i18n.getText('scenes.intro.request')
         ];
 
-        // Iniciar música
-        this.music = this.sound.add('intro_music', { 
-            volume: 0.5,
-            loop: true 
-        });
-        this.music.play();
+        // Verificar si la música ya está sonando
+        const allSounds = this.sound.sounds;
+        const isIntroMusicPlaying = allSounds.some(sound => 
+            sound.key === 'intro_music' && sound.isPlaying
+        );
+
+        // Solo iniciar música si no hay ninguna sonando
+        if (!isIntroMusicPlaying) {
+            this.music = this.sound.add('intro_music', { 
+                volume: 0.5,
+                loop: true 
+            });
+            this.music.play();
+        } else {
+            // Si ya está sonando, encontrar la instancia existente para poder detenerla más tarde si es necesario
+            this.music = allSounds.find(sound => sound.key === 'intro_music' && sound.isPlaying);
+        }
 
         // Agregar personaje inicialmente fuera de la pantalla
         this.wizard = this.add.image(-100, SCREEN_CONFIG.HEIGHT / 2, characterType)

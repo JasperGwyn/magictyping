@@ -228,11 +228,7 @@ export default class TitleScene extends BaseScene {
             console.log(`Idioma cambiado a: ${selectedOption.key}`);
             
             // Transición a la siguiente escena
-            // Detener la música si existe
-            if (this.music) {
-                this.music.stop();
-            }
-            
+            // Eliminar la detención de la música para permitir que continúe
             // Transición limpia a la escena de personalización
             this.transitionToScene('player-customization');
         } else {

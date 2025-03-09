@@ -182,10 +182,10 @@ export default class PlayerCustomizationScene extends BaseScene {
         } else if (event.key === 'Backspace') {
             this.playerName = this.playerName.slice(0, -1);
             this.updateNameText();
-        } else if (event.key === '1' || event.key === 'ArrowLeft') {
+        } else if (event.key === 'ArrowLeft') {
             this.selectedCharacter = 'wizard';
             this.updateCharacterSelection();
-        } else if (event.key === '2' || event.key === 'ArrowRight') {
+        } else if (event.key === 'ArrowRight') {
             this.selectedCharacter = 'oldwizard';
             this.updateCharacterSelection();
         } else if (event.key.length === 1 && event.key.match(/[a-zA-Z0-9]/) && this.playerName.length < 10) {
