@@ -146,6 +146,10 @@ export default class DifficultyScene extends BaseScene {
         this.registry.set('difficulty', difficulty);
         this.registry.set('speedMultiplier', DIFICULTADES[difficulty].multiplicador);
         
+        // Agregar un multiplicador de frecuencia basado en la dificultad
+        // Inverso del multiplicador de velocidad para equilibrar la dificultad
+        this.registry.set('frequencyMultiplier', 1 / DIFICULTADES[difficulty].multiplicador);
+        
         // Transición a la escena de introducción
         this.transitionToScene('intro');
     }

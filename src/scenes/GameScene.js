@@ -89,6 +89,20 @@ export default class GameScene extends BaseScene {
         const characterType = this.registry.get('characterType') || 'wizard';
         const playerName = this.registry.get('playerName') || 'Lupita';
 
+        // Obtener y aplicar los multiplicadores de dificultad
+        this.difficultyMultiplier = this.registry.get('speedMultiplier') || 1.0;
+        
+        // Obtener el multiplicador de frecuencia basado en la dificultad
+        // Si no existe, usar el valor actual (para mantener compatibilidad)
+        const difficultyFrequencyMultiplier = this.registry.get('frequencyMultiplier') || 1.0;
+        
+        // Aplicar el multiplicador de frecuencia de dificultad
+        this.frequencyMultiplier *= difficultyFrequencyMultiplier;
+        
+        console.log('speedMultiplier:', this.speedMultiplier);
+        console.log('difficultyMultiplier:', this.difficultyMultiplier);
+        console.log('frequencyMultiplier:', this.frequencyMultiplier);
+
         // Crear el personaje
         this.wizard = this.add.image(
             SCREEN_CONFIG.WIDTH - 100,  // A 100 pixels del borde derecho
@@ -159,13 +173,6 @@ export default class GameScene extends BaseScene {
         teclado.setScale(120 / teclado.width);
         teclado.setAlpha(0.8);
         teclado.setDepth(1);  // Depth bajo para que otros elementos aparezcan encima
-
-        // Obtener y loguear el multiplicador de dificultad
-        this.difficultyMultiplier = this.registry.get('speedMultiplier') || 1.0;
-        console.log('=== Debug Velocidad ===');
-        console.log('VELOCIDAD_BASE:', GAME_CONFIG.VELOCIDAD_BASE);
-        console.log('speedMultiplier:', this.speedMultiplier);
-        console.log('difficultyMultiplier:', this.difficultyMultiplier);
     }
 
     createUI() {
