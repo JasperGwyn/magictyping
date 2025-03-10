@@ -30,7 +30,7 @@ export const DIFICULTADES = {
     APRENDIZ: {
         nombre: 'ESTUDIANTE DE MAGIA',
         descripcion: 'Primeros pasos en el arte de la magia',
-        multiplicador: 0.5,   // 50% más lento, palabras aparecen 50% más rápido
+        multiplicador: 0.5,   // 50% más lento, palabras aparecen 50% menos frecuente (más espaciadas)
     },
     MAGO: {
         nombre: 'HECHICERO EXPERTO',
@@ -40,6 +40,6 @@ export const DIFICULTADES = {
     ENCANTADOR: {
         nombre: 'ARCHIMAGO SUPREMO',
         descripcion: 'Maestría total de las artes místicas',
-        multiplicador: 1.5,   // 50% más rápido, palabras aparecen 50% más lento
+        multiplicador: 1.5,   // 50% más rápido, palabras aparecen 50% más frecuente (menos espaciadas)
     }
 }; 

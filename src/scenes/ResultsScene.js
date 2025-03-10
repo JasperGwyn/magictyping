@@ -2,6 +2,7 @@ import BaseScene from './BaseScene';
 import { SCREEN_CONFIG, PALABRAS_POR_NIVEL } from '../config/gameConfig';
 import { HighScores } from '../services/storage/scores';
 import i18n from '../services/localization';
+import { saveHighScore, isHighScore } from '../services/highscores';
 
 export default class ResultsScene extends BaseScene {
     constructor() {
@@ -15,6 +16,7 @@ export default class ResultsScene extends BaseScene {
         this.panel = null;
         this.previousScores = null;
         this.canReturnToMenu = false;
+        this.panelBorder = null;
     }
 
     preload() {
@@ -40,213 +42,171 @@ export default class ResultsScene extends BaseScene {
 
         console.log('ResultsScene create iniciando');
 
-        // Panel semi-transparente (más grande)
-        this.panel = this.add.rectangle(
-            SCREEN_CONFIG.WIDTH/2,
-            SCREEN_CONFIG.HEIGHT/2,
-            SCREEN_CONFIG.WIDTH * 0.9,  // Aumentado de 0.6 a 0.9
-            SCREEN_CONFIG.HEIGHT * 0.7,  // Reducido de 0.9 a 0.8 para dejar espacio al texto inferior
+        // Recuperar el score y nivel del registro global
+        const score = this.registry.get('score') || 0;
+        const level = this.registry.get('level') || 1;
+        const playerName = this.registry.get('playerName') || 'JUGADOR';
+        
+        // Panel semi-transparente
+        const panelWidth = SCREEN_CONFIG.WIDTH * 0.8;
+        const panelHeight = SCREEN_CONFIG.HEIGHT * 0.7;
+        const panel = this.add.rectangle(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT / 2,
+            panelWidth,
+            panelHeight,
             0x000000,
             0.7
         );
-
-        // Iniciar música
-        if (this.music) this.music.stop();
-        this.music = this.sound.add('results_music', { volume: 0.3, loop: true });
-        this.music.play();
-
-        // Obtener puntuación, nivel y nombre del jugador
-        const score = this.registry.get('score') || 0;
-        const level = this.registry.get('level') || 1;
-        const playerName = this.registry.get('playerName') || 'LUPITA';
         
-        console.log('Score actual:', score);
-
-        // Verificar y guardar highscore
-        HighScores.isHighScore(score).then(isHigh => {
-            if (isHigh) {
-                console.log('Es un nuevo highscore!');
-                // Guardar directamente el score con el nombre de la configuración
-                this.saveScore(score, playerName).then(() => {
-                    this.showResults(score, level, true);
-                });
-            } else {
-                console.log('No es un nuevo highscore');
-                this.showResults(score, level, false);
-            }
-        });
-
-        // Input handling
-        this.input.keyboard.on('keydown', this.handleKeyInput, this);
-    }
-
-    async showResults(score, level, isHighScore) {
-        const centerY = SCREEN_CONFIG.HEIGHT / 2;
+        // Margen para centrar el texto dentro del panel
+        const textWidth = panelWidth - 100; // 50px de margen a cada lado
         
-        // Título - posición ajustada
-        this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 180, // Ajustado de -200 a -180
-                i18n.getText('scenes.results.gameOver'), {
+        // Título Game Over
+        const gameOverText = this.add.text(
+            SCREEN_CONFIG.WIDTH / 2, 
+            SCREEN_CONFIG.HEIGHT * 0.25,
+            i18n.getText('scenes.results.gameOver'),
+            {
                 fontFamily: '"Press Start 2P"',
-                fontSize: '28px',
+                fontSize: '38px',
                 fill: '#ffffff',
-                align: 'center'
-            }).setOrigin(0.5)
-        );
-
-        // Resumen de la partida - posición ajustada
-        this.displayObjects.push(
-            this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 110, // Ajustado de -120 a -110
-                i18n.getText('scenes.results.summary', { level: level, score: score }), {
+                align: 'center',
+                wordWrap: { width: textWidth }
+            }
+        ).setOrigin(0.5);
+        
+        // Información del nivel alcanzado
+        const levelText = this.add.text(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT * 0.35,
+            i18n.getText('scenes.results.levelReached', { level }),
+            {
                 fontFamily: '"Press Start 2P"',
                 fontSize: '20px',
                 fill: '#ffffff',
                 align: 'center',
-                lineSpacing: 15 // Reducido de 20 a 15
-            }).setOrigin(0.5)
-        );
-
-        // Mensaje de high score si corresponde - posición ajustada
-        if (isHighScore) {
-            this.displayObjects.push(
-                this.add.text(SCREEN_CONFIG.WIDTH/2, centerY - 35, // Ajustado de -40 a -35
-                    i18n.getText('scenes.results.newHighScore'), {
+                wordWrap: { width: textWidth }
+            }
+        ).setOrigin(0.5);
+        
+        // Puntaje final
+        const scoreText = this.add.text(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT * 0.43,
+            i18n.getText('scenes.results.finalScore', { score }),
+            {
+                fontFamily: '"Press Start 2P"',
+                fontSize: '20px',
+                fill: '#ffffff',
+                align: 'center',
+                wordWrap: { width: textWidth }
+            }
+        ).setOrigin(0.5);
+        
+        // Guardar el puntaje y comprobar si es un nuevo highscore
+        const result = saveHighScore(playerName, score, level);
+        
+        // Si es un nuevo highscore, mostrar mensaje
+        if (result.isNewHighScore) {
+            const newHighscoreText = this.add.text(
+                SCREEN_CONFIG.WIDTH / 2,
+                SCREEN_CONFIG.HEIGHT * 0.52,
+                i18n.getText('scenes.results.newHighScore'),
+                {
                     fontFamily: '"Press Start 2P"',
                     fontSize: '24px',
-                    fill: '#ffff00'
-                }).setOrigin(0.5)
-            );
-        }
-
-        // Obtener el nombre del jugador actual
-        const playerName = this.registry.get('playerName') || 'LUPITA';
-
-        // Mostrar leaderboard - posición ajustada
-        let scores = await HighScores.get();
-        
-        // Verificar si el puntaje actual ya está en el leaderboard
-        const scoreAlreadyInLeaderboard = scores.some(s => s.name === playerName && s.score === score);
-        
-        // Si es un nuevo highscore pero no está en el leaderboard, lo agregamos manualmente
-        if (isHighScore && !scoreAlreadyInLeaderboard) {
-            console.log("Agregando manualmente el score al leaderboard para mostrar");
-            
-            // Crear objeto de puntaje para el jugador actual
-            const currentScoreData = {
-                name: playerName,
-                score: score
-            };
-            
-            // Agregar a la lista de puntajes y ordenar
-            scores.push(currentScoreData);
-            
-            // Ordenar puntajes de mayor a menor
-            scores.sort((a, b) => b.score - a.score);
-        }
-        
-        if (scores && scores.length > 0) {
-            // Título del leaderboard
-            this.displayObjects.push(
-                this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 10, // Ajustado de +20 a +10
-                    i18n.getText('scenes.results.leaderboard'), {
-                    fontFamily: '"Press Start 2P"',
-                    fontSize: '20px',
-                    fill: '#ffffff'
-                }).setOrigin(0.5)
-            );
-
-            // Mostrar los top 5 scores - posiciones ajustadas
-            const topScores = scores.slice(0, 5);
-            let foundCurrentScore = false; // Variable para rastrear si ya encontramos el score actual
-            
-            topScores.forEach((scoreData, index) => {
-                const scoreText = `${index + 1}. ${scoreData.name}: ${scoreData.score}`;
-                
-                // Resaltar solo la primera coincidencia de nombre y puntaje
-                // que corresponde al puntaje que acaba de conseguir el jugador
-                const isCurrentPlayerScore = !foundCurrentScore && 
-                                           scoreData.name === playerName && 
-                                           scoreData.score === score;
-                
-                // Si este es el score actual, marcamos que ya lo encontramos
-                if (isCurrentPlayerScore) {
-                    foundCurrentScore = true;
+                    fill: '#ffff00',
+                    align: 'center',
+                    wordWrap: { width: textWidth }
                 }
-                
-                this.displayObjects.push(
-                    this.add.text(SCREEN_CONFIG.WIDTH/2, centerY + 45 + (index * 26), // Ajustado de +60 y espaciado 28 a +45 y espaciado 26
-                        scoreText, {
-                        fontFamily: '"Press Start 2P"',
-                        fontSize: '18px',
-                        fill: isCurrentPlayerScore ? '#ffff00' : '#ffffff'
-                    }).setOrigin(0.5)
-                );
+            ).setOrigin(0.5);
+            
+            // Animación de parpadeo para el texto de nuevo highscore
+            this.tweens.add({
+                targets: newHighscoreText,
+                alpha: 0.5,
+                duration: 500,
+                yoyo: true,
+                repeat: -1
             });
         }
-
-        // Texto para volver al menú
-        const menuText = this.add.text(
-            SCREEN_CONFIG.WIDTH/2,
-            SCREEN_CONFIG.HEIGHT - 45, // Ajustado de -50 a -45
+        
+        // Título de mejores puntajes
+        this.add.text(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT * 0.6,
+            i18n.getText('scenes.results.bestScores'),
+            {
+                fontFamily: '"Press Start 2P"',
+                fontSize: '20px',
+                fill: '#ffffff',
+                align: 'center'
+            }
+        ).setOrigin(0.5);
+        
+        // Mostrar los 5 mejores puntajes
+        const highscoreStartY = SCREEN_CONFIG.HEIGHT * 0.67;
+        const highscoreSpacing = 25;
+        
+        result.scores.forEach((highscore, index) => {
+            const isNewScore = index === result.newScoreIndex;
+            const color = isNewScore ? '#ffff00' : '#ffffff';
+            
+            // Formato: 1. NOMBRE: PUNTAJE
+            const highscoreText = this.add.text(
+                SCREEN_CONFIG.WIDTH / 2,
+                highscoreStartY + (index * highscoreSpacing),
+                `${index + 1}. ${highscore.name}: ${highscore.score}`,
+                {
+                    fontFamily: '"Press Start 2P"',
+                    fontSize: '16px',
+                    fill: color,
+                    align: 'center'
+                }
+            ).setOrigin(0.5);
+            
+            // Si es el nuevo puntaje, hacerlo parpadear
+            if (isNewScore) {
+                this.tweens.add({
+                    targets: highscoreText,
+                    alpha: 0.7,
+                    duration: 500,
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+        });
+        
+        // Instrucciones para volver al menú
+        const returnText = this.add.text(
+            SCREEN_CONFIG.WIDTH / 2,
+            SCREEN_CONFIG.HEIGHT - 50,
             i18n.getText('scenes.results.returnToMenu'),
             {
                 fontFamily: '"Press Start 2P"',
-                fontSize: '18px',
-                fill: '#ffffff'
+                fontSize: '16px',
+                fill: '#ffffff',
+                align: 'center',
+                wordWrap: { width: textWidth }
             }
         ).setOrigin(0.5);
-        this.displayObjects.push(menuText);
-
-        // Animación de parpadeo
+        
+        // Animación de parpadeo para el texto de retorno
         this.tweens.add({
-            targets: menuText,
-            alpha: 0,
+            targets: returnText,
+            alpha: 0.5,
             duration: 500,
             yoyo: true,
             repeat: -1
         });
-
-        // Habilitar el retorno al menú
-        this.canReturnToMenu = true;
-    }
-
-    async saveScore(score, playerName) {
-        console.log('Guardando score:', score, 'con nombre:', playerName);
         
-        await HighScores.add({
-            score: score,
-            name: playerName
-        });
-        
-        console.log('Score guardado');
-    }
-
-    handleKeyInput(event) {
-        if ((event.key === ' ' || event.key === 'Enter') && this.canReturnToMenu) {
-            this.clearDisplayObjects();
-            if (this.music) this.music.stop();
-            this.returnToMenu();
-        }
-    }
-
-    clearDisplayObjects() {
-        this.displayObjects.forEach(obj => {
-            if (obj && obj.destroy) {
-                obj.destroy();
-            }
-        });
-        this.displayObjects = [];
+        // Configurar input para volver al menú
+        this.input.keyboard.once('keydown-SPACE', () => this.returnToMenu());
+        this.input.keyboard.once('keydown-ENTER', () => this.returnToMenu());
     }
 
     returnToMenu() {
-        if (this.music) {
-            this.music.stop();
-        }
-        if (this.homeKey) {
-            this.homeKey.removeAllListeners();
-        }
-        
-        // Transición a la pantalla principal
         this.transitionToScene('title');
     }
 
@@ -255,6 +215,10 @@ export default class ResultsScene extends BaseScene {
         if (this.panel) {
             this.panel.destroy();
             this.panel = null;
+        }
+        if (this.panelBorder) {
+            this.panelBorder.destroy();
+            this.panelBorder = null;
         }
         super.shutdown();
     }

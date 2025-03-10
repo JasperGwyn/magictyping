@@ -146,9 +146,9 @@ export default class DifficultyScene extends BaseScene {
         this.registry.set('difficulty', difficulty);
         this.registry.set('speedMultiplier', DIFICULTADES[difficulty].multiplicador);
         
-        // Agregar un multiplicador de frecuencia basado en la dificultad
-        // Inverso del multiplicador de velocidad para equilibrar la dificultad
-        this.registry.set('frequencyMultiplier', 1 / DIFICULTADES[difficulty].multiplicador);
+        // Corregir: Para Aprendiz (nivel fácil), queremos menor frecuencia (más tiempo entre palabras)
+        // Para Encantador (nivel difícil), queremos mayor frecuencia (menos tiempo entre palabras)
+        this.registry.set('frequencyMultiplier', DIFICULTADES[difficulty].multiplicador);
         
         // Transición a la escena de introducción
         this.transitionToScene('intro');

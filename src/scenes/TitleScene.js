@@ -15,6 +15,16 @@ export default class TitleScene extends BaseScene {
         this.musicStarted = false;
     }
 
+    init() {
+        // Reiniciar las variables de control de música cuando se vuelve a entrar a la escena
+        this.musicStarted = false;
+        
+        // Si la música ya estaba cargada previamente, marcarla como disponible
+        if (this.cache.audio.exists('intro_music')) {
+            this.musicPreloaded = true;
+        }
+    }
+
     preload() {
         super.preload();
         // Cargar la música con mayor prioridad
@@ -47,11 +57,16 @@ export default class TitleScene extends BaseScene {
         
         // Solo inicializar música si no hay ninguna sonando
         if (!isAnyMusicPlaying) {
+            // Detener cualquier otra música que pudiera estar sonando
+            this.sound.stopAll();
+            
+            // Crear y reproducir la música de intro
             this.music = this.sound.add('intro_music', {
                 volume: 0.5,
                 loop: true
             });
             this.music.play();
+            console.log('Iniciando música de intro en TitleScene');
         }
         this.musicStarted = true;
     }
@@ -59,9 +74,18 @@ export default class TitleScene extends BaseScene {
     create() {
         super.create();
         
+        console.log('TitleScene create - musicPreloaded:', this.musicPreloaded, 'musicStarted:', this.musicStarted);
+        
         // Si la música ya está cargada, iniciarla inmediatamente
         if (this.musicPreloaded && !this.musicStarted) {
             this.startMusic();
+        } else if (!this.musicStarted) {
+            // Si no está cargada, forzar la carga ahora
+            this.load.audio('intro_music', [
+                'assets/sounds/music/intro.opus',
+                'assets/sounds/music/intro.mp3'
+            ]);
+            this.load.start();
         }
 
         // TÍTULO PRINCIPAL: "MAGIC TYPING" - Posicionado más arriba y visible desde el inicio

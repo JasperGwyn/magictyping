@@ -201,8 +201,8 @@ export default class BaseScene extends Phaser.Scene {
             // Para otras escenas, procedemos con la transición normal a la pantalla de título
             const currentScene = this.scene.key;
             
-            // Modificar el manejo de la música
-            if (this.music && !this.introMusicScenes.includes('title')) {
+            // Detener la música actual pero asegurarse de que se reiniciará correctamente
+            if (this.music) {
                 this.music.stop();
             }
             

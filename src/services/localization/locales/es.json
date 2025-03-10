@@ -58,7 +58,7 @@
           "description": "Maestría total de las artes místicas"
         }
       },
-      "controls": "USA ↑↓ PARA ELEGIR\nPULSA ESPACIO O ENTER PARA CONFIRMAR"
+      "controls": "USA ↑↓ PARA ELEGIR\nPULSA ENTER PARA CONFIRMAR"
     },
     "game": {
       "instructions": "Escribí las letras y palabras que van cayendo\ny luego apretá ENTER",
@@ -96,7 +96,7 @@
       }
     },
     "results": {
-      "gameOver": "¡PARTIDA\nTERMINADA!",
+      "gameOver": "¡GAME OVER!",
       "summary": "Nivel alcanzado: {level}\nPuntuación final: {score}",
       "newHighScore": "¡NUEVO HIGH SCORE!",
       "leaderboard": "MEJORES PUNTAJES",
