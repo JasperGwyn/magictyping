@@ -147,21 +147,21 @@ const config = {
         roundPixels: true
     },
     scene: [
-        LoadingScene,              // 0. Escena de carga PRIMERO
-        TitleScene,                // 1. Pantalla de título inicial
-        PlayerCustomizationScene,  // 2. Personalización del personaje
-        IntroScene,                // 3. Introducción
-        DifficultyScene,           // 4. Selección de dificultad
-        InstructionsScene,         // 5. Instrucciones
-        GameScene,                 // 6. Gameplay
-        ResultsScene,              // 7. Resultados
+        TitleScene,                // 1. Pantalla de título inicial PRIMERO
+        LoadingScene,              // 2. Escena de carga como respaldo
+        PlayerCustomizationScene,  // 3. Personalización del personaje
+        IntroScene,                // 4. Introducción
+        DifficultyScene,           // 5. Selección de dificultad
+        InstructionsScene,         // 6. Instrucciones
+        GameScene,                 // 7. Gameplay
+        ResultsScene,              // 8. Resultados
     ]
 };
 
 // Si hay una escena inicial especificada en las variables de entorno, usarla
 if (process.env.START_SCENE) {
     const sceneMap = {
-        'loading': LoadingScene,    // Agregamos loading al mapa
+        'loading': LoadingScene,
         'title': TitleScene,
         'player-customization': PlayerCustomizationScene,
         'intro': IntroScene,
@@ -171,12 +171,12 @@ if (process.env.START_SCENE) {
         'results': ResultsScene
     };
     
-    // Reorganizar las escenas para poner la escena inicial primero, pero mantener LoadingScene siempre
+    // Reorganizar las escenas para poner la escena inicial primero, manteniendo LoadingScene como respaldo
     const startScene = sceneMap[process.env.START_SCENE];
     if (startScene && startScene !== LoadingScene) {
         config.scene = [
-            LoadingScene, // Siempre mantener LoadingScene primero
             startScene,
+            LoadingScene, // Mantener LoadingScene como respaldo
             ...Object.values(sceneMap).filter(scene => scene !== startScene && scene !== LoadingScene)
         ];
     }

@@ -11,25 +11,36 @@ export default class TitleScene extends BaseScene {
             { key: 'en', displayName: 'English' }
         ];
         this.selectedOptionIndex = 0; // Default selected option
+        this.musicPreloaded = false; // Control para música precargada
+        this.musicStarted = false;
     }
 
     preload() {
         super.preload();
-        // Cargar la música del intro que sabemos que existe
+        // Cargar la música con mayor prioridad
         this.load.audio('intro_music', [
             'assets/sounds/music/intro.opus',
             'assets/sounds/music/intro.mp3'
-        ]);
+        ], {
+            priority: 1 // Alta prioridad para cargar primero
+        });
         this.load.image('wizard', 'assets/images/characters/she.png');
         this.load.image('oldwizard', 'assets/images/characters/he.png');
+        
+        // Detectar cuando la música ha sido cargada
+        this.load.on('filecomplete-audio-intro_music', () => {
+            this.musicPreloaded = true;
+            // Si ya estamos en create, iniciar la música
+            if (this.scene.isActive() && !this.musicStarted) {
+                this.startMusic();
+            }
+        });
     }
-
-    create() {
-        super.create();
-        
-        // Verificar si hay alguna música sonando usando el sistema de sonido global
+    
+    // Método para iniciar la música
+    startMusic() {
+        // Verificar si hay alguna música sonando
         const allSounds = this.sound.sounds;
-        
         const isAnyMusicPlaying = allSounds.some(sound => 
             sound.key === 'intro_music' && sound.isPlaying
         );
@@ -41,6 +52,16 @@ export default class TitleScene extends BaseScene {
                 loop: true
             });
             this.music.play();
+        }
+        this.musicStarted = true;
+    }
+
+    create() {
+        super.create();
+        
+        // Si la música ya está cargada, iniciarla inmediatamente
+        if (this.musicPreloaded && !this.musicStarted) {
+            this.startMusic();
         }
 
         // TÍTULO PRINCIPAL: "MAGIC TYPING" - Posicionado más arriba y visible desde el inicio
