@@ -96,7 +96,7 @@
       }
     },
     "results": {
-      "gameOver": "¡PARTIDA TERMINADA!",
+      "gameOver": "¡PARTIDA\nTERMINADA!",
       "summary": "Nivel alcanzado: {level}\nPuntuación final: {score}",
       "newHighScore": "¡NUEVO HIGH SCORE!",
       "leaderboard": "MEJORES PUNTAJES",
